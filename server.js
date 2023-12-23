@@ -3,14 +3,13 @@ const express = require('express');
 const app = express();
 const port = process.env.port || 3000;
 
+// router
+const router = require('./routers/router')
+
 // middleware
 app.use(express.static(__dirname + '/'));
 app.use(express.json());
-
-// routing
-app.get('/', function (req,res) {
-    res.sendFile('./index.html');
-});
+app.use('/', router);
 
 // server listening
 app.listen(port, () => {
