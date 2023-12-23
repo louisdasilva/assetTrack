@@ -1,11 +1,18 @@
-let express = require('express');
-let app = express();
-let port = process.env.port || 3000;
+// express setup
+const express = require('express');
+const app = express();
+const port = process.env.port || 3000;
 
+// middleware
+app.use(express.static(__dirname + '/'));
+app.use(express.json());
+
+// routing
 app.get('/', function (req,res) {
-    res.send('Hello World')
+    res.sendFile('./index.html');
 });
 
+// server listening
 app.listen(port, () => {
-    console.log('express server started');
+    console.log(`express server listening on ${port}`);
 });
