@@ -5,20 +5,48 @@
     <meta name="description" content="assetTrack - Home"/>
     <meta name="author" content="Dan Blair, Louis da Silva, Amrith Jayadeep, Sohail Mohammed, Rachel Moraa Nyantika"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<title>assetTrack</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Bootstrap CSS --> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style> 
+        .col-md-12 { margin: 0 auto; }
+        .container { 
+            width: 100%;
+            margin: 0 auto;
+        }
+    </style>
+    <!-- END Bootstrap CSS --> 
+    <title>assetTrack</title>
 </head>
 <body>
-    <h1>assetTrack</h1>
-    <h2>Sign In</h2>
+    <div class="container">
+        <div class="col-md-12">
+                <h1 class="mt-3">assetTrack</h1>
+                <h2 class="mb-3">Sign In</h2>
+                <p>Welcome to assetTrack - Please sign in to continue:</p>
 
-    <p>Welcome to assetTrack</p>
-    <p>Please sign in to continue:</p>
-    
-    <input type="text" placeholder="Username" id="userName"/><br><br>
-    <input type="password" placeholder="Password" id="userPassword"/><br><br>
-    <button class="dataButton" id="userLogin" onclick="login()">Login</button>
+            <div class="row mb-3">
+                <div class="col-md-4 d-flex align-items-center"> <label for="name" class="form-label">Username:</label> </div>
+                <div class="col-md-4"> <input type="text" class="form-control" id="userName" placeholder="Username"> </div> 
+                <span id="nameInputFeedbackText" class="col-md-4 form-text"></span> 
+            </div>
 
+            <div class="row mb-3">
+                <div class="col-md-4 d-flex align-items-center"> <label for="password" class="form-label">Password:</label> </div>
+                <div class="col-md-4"> <input type="password" class="form-control" id="userPassword" placeholder="Password"/> </div> 
+                <span id="passwordInputFeedbackText" class="col-md-4 form-text"></span> 
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6"> 
+                    <button type="button" class="btn btn-primary me-1 dataButton" id="userLogin" onclick="validateInput()">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOTSTRAP BUNDLE WITH POPPER -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="./scripts/login.js"></script>
 </body>
 </html>
