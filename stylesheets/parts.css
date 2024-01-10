@@ -1,0 +1,92 @@
+.navbar-size {
+    width: 95%;
+    margin: 0 auto;
+}
+
+.user-image-size {
+    height: 180px;
+    margin: 10px 0;
+}
+
+.main-body {
+    background-color: #ffffff;
+    color: #5e5657;
+    height: calc(100vh - 64px);
+}
+
+.materialboxed-image {
+    margin: 0 auto;
+    height: 400px;
+}
+
+.click-me-button {
+    background-color: #6268d9;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    padding: 20px;
+    padding-right: 30px;
+    padding-bottom: 55px;
+    font-size: 20px;
+    font-weight: 600;
+}
+.click-me-button:hover {
+  background-color: #5358b5; /* Change to your desired hover color */
+}
+
+nav {
+    color: #fff;
+    background-color: #6268d9;
+    width: 100%;
+    height: 90px;
+    line-height: 30px;
+}
+
+#nav-mobile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+}
+
+.navBar {
+    font-size: 30px;
+    padding: 30px;
+    padding-left: 60px;
+    padding-right: 60px;
+}
+
+  .btn, .btn-large, .btn-small {
+    background-color: #6268d9;
+  }
+
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #6268d9;
+    color: #fff;
+    font-size: 26px;
+  }
+
+  td {
+    font-size: 22px; 
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }

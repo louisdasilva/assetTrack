@@ -12,6 +12,7 @@ const client = new MongoClient(uri, {
 	}
 });
 
+// LOGIN DATABASE CONNECTION
 async function run() {
   try {
     // Connect the client to the server (optional starting in v4.7)
@@ -25,5 +26,21 @@ async function run() {
   }
 }
 run().catch(console.dir);
+// END LOGIN DATABASE CONNECTION
+
+// PARTS DATABASE CONNECTION
+async function runPartsDBConnection() {
+  try {
+      await client.connect();
+      collection = client.db().collection('Parts');
+      // console.log(collection);
+  } catch(ex) {
+      console.error(ex);
+  }
+}
+runPartsDBConnection();
+// END PARTS DATABASE CONNECTION
+
+
 
 module.exports = client;

@@ -4,13 +4,17 @@ const app = express();
 const port = process.env.port || 3000;
 require('./dbConnection');
 
-// router
-const router = require('./routers/router')
+// ROUTERS
+const loginRouter = require('./routers/router'); //TODO change name to loginRouter
+const partRouter = require('./routers/partsRouter');
 
-// middleware
+// MIDDLEWARE
 app.use(express.static(__dirname + '/'));
 app.use(express.json());
-app.use('/', router);
+
+//USE ROUTERS
+app.use('/', loginRouter);
+app.use('/api', partRouter);
 
 // server listening
 app.listen(port, () => {
