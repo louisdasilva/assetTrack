@@ -5,7 +5,7 @@ const port = process.env.port || 3000;
 require('./dbConnection');
 
 // ROUTERS
-const loginRouter = require('./routers/router'); //TODO change name to loginRouter
+const loginRouter = require('./routers/loginRouter');
 const partRouter = require('./routers/partsRouter');
 
 // MIDDLEWARE

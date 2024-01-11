@@ -1,9 +1,7 @@
 let client = require('../dbConnection');
-
 let collection = client.db().collection('Users');
 
 async function getUser(userName) {
-
     try {
         const userData = await collection.find({username:userName}).toArray();
         return userData[0];
