@@ -41,8 +41,7 @@ function CheckCredentials(userName, userPassword) {
             }
             //NOW CHECK PASSWORD - Note checking for username is redundant as we already navigated to object with userName.
             else if (userPassword === response.data.password) {
-                alert("SUCCESS, NOW MAKE A PAGE TO NAVIGATE TO!");
-                location.href=SERVER_URL; // THEN NAVIGATE TO IT!
+                location.href = SERVER_URL + 'parts.html';
             }
             else {
                 alert("Error! \n That password does not match the username.");
