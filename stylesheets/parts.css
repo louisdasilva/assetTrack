@@ -19,7 +19,7 @@
     height: 400px;
 }
 
-.click-me-button {
+.common-button-style {
     background-color: #6268d9;
     margin-top: 20px;
     margin-bottom: 40px;
@@ -29,7 +29,7 @@
     font-size: 20px;
     font-weight: 600;
 }
-.click-me-button:hover {
+.common-button-style:hover {
   background-color: #5358b5; /* Change to your desired hover color */
 }
 

@@ -93,6 +93,19 @@ const formSubmitted = () => {
     postPart(formData);
 }
 
+let searchInput = {};
+// EXTRACT SEARCH INFO FROM INPUT INFORMATION
+const searchSubmitted = () => {
+    searchInput = $('#searchInput').val();
+    console.log(searchInput);
+    $('#searchModal').modal('close');
+}
+
+function checkSearch(allParts) {
+    // console.log("Search Input Data: "+JSON.stringify(searchInput));
+    // console.log("DB Response Data: "+JSON.stringify(allParts))
+}
+
 // << SEND POST REQUEST TO SERVER >>
 // ---------------------------------
 function postPart(part){
@@ -135,32 +148,42 @@ function removeCard(cardId) {
 
 // << SEND REQUEST TO RETRIEVE ALL PARTS FROM SERVER >>
 // ----------------------------------------------------
-function getAllParts(){
-    $.get('/api/parts', (response) => {
-        if (response.statusCode === 200) {
-            // RESPONSE DATA IS AN ARRAY OF ALL DATA IN THE COLLECTION -> (response.data)
-            // MAP METHOD -> CREATES NEW ARRAY CALLED 'partTypeArray' WHICH INCLUDES THE partFamily PROPERTY FROM EACH OBJECT IN COLLECTION
-            const partTypeArray = response.data.map(part => part.partFamily);
-            // CALCULATE & STORE THE NUMBER OF OCCURENCES FOR EACH VALID PART TYPE IN partTypeArray
-            const partCount = countValidParts(partTypeArray);
-            // CALL METHOD TO CREATE PART TYPE TABLE WITH THE NEW COUNT OF DIFFERENT PART TYPES -> partCount
-            populateTable(partCount,"");
-            // CALL METHOD TO CREATE CARDS FOR EACH PART
-            addCards(response.data);
-        }
-        else { console.log ("Failed to execute getAllParts"); }
+function getAllParts() {
+    return new Promise((resolve, reject) => {
+        $.get('/api/parts', (response) => {
+            if (response.statusCode === 200) {
+                resolve(response.data);
+            } else {
+                reject(new Error("Failed to execute getAllParts"));
+            }
+        });
     });
 }
 
 // << MAIN METHIOD >>
 // ------------------
-const initialiseDOM = () => {
+const initialiseDOM = async () => {
+    try {
+        const ALL_PARTS_ARRAY = await getAllParts(); // CREATE ARRAY OF ALL OBJECTS IN THE PARTS COLLECTION
+        const ALL_COMPONENTS_ARRAY = ALL_PARTS_ARRAY.map(part => part.partFamily); // CREATE ARRAY OF ALL COMPONENTS IN THE PARTS COLLECTION E.G. { wing, fuselage, wing }
+        const COMPONENT_COUNT = countValidParts(ALL_COMPONENTS_ARRAY); // CREATE OBJECT OF ALL COMPONENTS AND THEIR COUNT IN PARTS COLLECTION E.G. { wing: 2, fuselage: 3 }
+        checkSearch(ALL_PARTS_ARRAY);
+        populateTable(COMPONENT_COUNT, ""); // CREATE COMPONENT TABLE WITH COUNT OF DIFFERENT COMPONENTS
+        addCards(ALL_PARTS_ARRAY); // CREATE A CARD FOR EACH PART
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+// << MAIN METHIOD >>
+// ------------------
+const initialiseDOMElements = async () => {
     // INITIALISE & EXECUTE FUNCTIONS WHEN PAGE HAS LOADED
     $(document).ready(function () {
         $('.materialboxed').materialbox();
         $('#formSubmit').click(() => { formSubmitted(); });
+        $('#searchSubmit').click(() => { searchSubmitted(); });
         $('.modal').modal();
-        getAllParts();
     });
 };
 
@@ -170,5 +193,8 @@ const initialiseDOM = () => {
 if (typeof module !== 'undefined') { module.exports = { countValidParts, countValidParts, addCards }; } // EXPORTS
 // << (browser environment) >>
 // ---------------------------
-else { initialiseDOM(); } // INITIALISE DOM
+else { 
+    initialiseDOMElements();
+    initialiseDOM(); 
+} // INITIALISE DOM
 //The above conditional allows the same code to be used in both environments.
