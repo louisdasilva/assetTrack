@@ -91,11 +91,19 @@ nav {
     padding-bottom: 30px;
   }
 
-#removeFilterBtn {
+.removeFilterBtn {
   display: none;
-  margin-bottom: 20px;
+}
+
+.filter-button {
+  margin-right: 20px;
 }
 
 #filterLabel {
   display: none;
+  margin-bottom: 10px;
+}
+
+#filterButtonsContainer {
+  margin-bottom: 30px;
 }

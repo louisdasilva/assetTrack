@@ -1,4 +1,8 @@
+
+let appliedFilters = [];
 let searchInput = {};
+let filterButtonsContainer = $('#filterButtonsContainer');
+let cardsSection = $('#card-section'); // GET CARD SECTION
 
 // ARRAY OF ALL VALID PART FAMILIES -> GLOABL SCOPE AS USED BY MULTIPLE METHODS
 const VALID_PARTS = [ "wing" , "fuselage" , "tail" , "engine" , "landing gear" , "cockpit" ];
@@ -94,43 +98,91 @@ const formSubmitted = () => {
     postPart(formData);
 }
 
-// FILTER & DISPLAY SEARCH INFORMATION
-// -----------------------------------
-const searchSubmitted = (allParts, componentCount) => {
-    let cardsSection = $('#card-section'); // GET CARD SECTION
-    cardsSection.empty(); // CHANGE CARD SECTION TO EMPTY
-    
+// CREATE FILTER BUTTONS BASED ON SEARCH INPUT
+// -------------------------------------------
+const createFilterButtonsBasedOnSearchInput = (allParts) => {
     searchInput = $('#searchInput').val(); // GET USER SEARCH INPUT
-    const FILTERED_PARTS_ARRAY = allParts.filter(part => part.partFamily === searchInput); // CREATE ARRAY OF PARTS MATCHING SEARCH INPUT
-    const FILTERED_COMPONENTS_COUNT = { [searchInput]: FILTERED_PARTS_ARRAY.length };
-    let filterLabel = (`${searchInput}`); // ASSIGN FILTER LABEL BASED ON SEARCH INPUT
-    $('#removeFilterBtn').html(`<i class="material-icons left">close</i>${filterLabel}`); // UPDATE FILTER BUTTON TO INCLUDE NEW FILTER LABEL
     
-    populateTable(FILTERED_COMPONENTS_COUNT); // CREATE TABLE WITH FILTERED COMPONENTS
-    addCards(FILTERED_PARTS_ARRAY); // ADD FILTERED CARDS
-
-    // SHOW OR HIDE FILTER INFO BASED ON SEARCH INPUT
-    if (searchInput == "") {
-        $('#removeFilterBtn').hide();
-        $('#filterLabel').hide();
+    if (!appliedFilters.includes(searchInput)) { // CHECK IF THE SEARCH INPUT IS ALREADY A FILTER
+        appliedFilters.push(searchInput); // ADD NEW INPUT TO LIST OF APPLIED FILTERS
+        filterButtonsContainer.empty(); // REMOVE ALL FILTER BUTTONS
+        // ADD ALL FILTER BUTTONS INCLUDING NEW INPUT
+        appliedFilters.forEach(filter => {
+            // ATTACH HTML & FILTER NAME
+            let filterButton = $('<button>', {
+                class: 'waves-effect waves-light btn-small remove-filter-btn filter-button',
+                html: `<i class="material-icons left">close</i>${filter}`
+            });
+            filterButton.attr('data-filter', filter); // ADD DATA ATTRIBUTE TO REFER TO FOR DELETION
+            // ATTACH REMOVE FILTER FUNCTION ONCLICK
+            filterButton.click(() => {
+                removeFilterFromArray(filter);
+                hideFilterButton(filter);
+                cardsSection.empty(); // CHANGE CARD SECTION TO EMPTY
+                const FILTERED_PARTS_ARRAY = returnUserFilteredPartsInArray(allParts); // AN ARRAY OF PART OBJECTS
+                const FILTERED_COMPONENTS_COUNT = returnUserFilteredComponentsAndCountsAsObject(allParts); // E.G. {wing: 2, fuselage: 1}
+                populateTable(FILTERED_COMPONENTS_COUNT, ""); // CREATE TABLE WITH ALL COMPONENTS FROM COLLECTION
+                if (appliedFilters.length == 0) { // CHECK NO FILTERS ARE APPLIED
+                    addCards(allParts); // ADD ALL CARDS FROM COLLECTION
+                }
+                else { addCards(FILTERED_PARTS_ARRAY); } // ADD CARDS MATCHING SEARCH INPUT FILTER FROM COLLECTION
+            });
+            filterButtonsContainer.append(filterButton); // APPEND ALL REMOVE FILTER BUTTONS TO CONTAINER IN HTML
+        });
+        $('#filterLabel').show(); // SHOW FILTERS HEADING
     }
-    else {
-        $('#removeFilterBtn').show();
-        $('#filterLabel').show();
+    else { 
+        alert("Filter already applied");
     }
-
-    // FILTER BUTTON ONCLICK 
-    $('#removeFilterBtn').click(() => {
-        $('#filterLabel').hide(); // HIDE FILTER LABEL
-        $('#removeFilterBtn').hide(); // HIDE FILTER BUTTON
-        cardsSection.empty(); // CHANGE CARD SECTION TO EMPTY
-        populateTable(componentCount, ""); // CREATE TABLE WITH ALL COMPONENTS FROM COLLECTION
-        addCards(allParts);  // ADD CARD FOR ALL PARTS FROM COLLECTION
-    });
-
     $('#searchModal').modal('close'); // CLOSE SEARCH MODAL
 }
 
+function updateDisplayBasedOnFilters(allParts) {
+    const FILTERED_PARTS_ARRAY = returnUserFilteredPartsInArray(allParts);
+    const FILTERED_COMPONENTS_COUNT = returnUserFilteredComponentsAndCountsAsObject(allParts);
+    cardsSection.empty(); // REMOVE ALL CARDS FROM CARD SECTION
+    populateTable(FILTERED_COMPONENTS_COUNT); // CREATE TABLE WITH FILTERED COMPONENTS AND COUNTS
+    addCards(FILTERED_PARTS_ARRAY); // ADD FILTERED CARDS
+}
+
+function returnUserFilteredPartsInArray(allParts) {
+        let filteredArrays = [];
+        // Iterate over each applied filter
+        appliedFilters.forEach(appliedFilter => {
+            // Filter the parts based on the current applied filter
+            let filteredParts = allParts.filter(part => part.partFamily === appliedFilter);
+            // Push the filtered parts to the array
+            filteredArrays.push(filteredParts);
+        });
+        // Combine all filtered arrays into a single array (using flatMap for this purpose)
+        const FILTERED_PARTS_ARRAY = filteredArrays.flatMap(filteredParts => filteredParts);
+        return FILTERED_PARTS_ARRAY
+}
+
+function returnUserFilteredComponentsAndCountsAsObject(allParts) {
+    let filteredComponentsCount = {};
+
+    appliedFilters.forEach(appliedFilter => {
+        // COUNT PARTS FOR EACH APPLIED FILTER
+        filteredComponentsCount[appliedFilter] = allParts.filter(part => part.partFamily === appliedFilter).length;
+    });
+    return filteredComponentsCount;
+}
+
+function removeFilterFromArray(filterToRemove) {
+    const indexToRemove = appliedFilters.indexOf(filterToRemove); // GET INDEX OF FILTER TO REMOVE
+    if (indexToRemove !== -1) { // IF INDEX OF FILTER FOUND
+        appliedFilters.splice(indexToRemove, 1); // REMOVE THAT INDEX
+    }
+    return appliedFilters;
+}
+
+function hideFilterButton(filterToRemove) {
+    if (appliedFilters.length == 0) { // CHECK IF NO FILTERS APPLIED
+        $('#filterLabel').hide(); // HIDE FILTER LABEL
+    }
+    $(`.remove-filter-btn[data-filter="${filterToRemove}"]`).hide(); // HIDE FILTER BUTTON
+}
 
 
 // << SEND POST REQUEST TO SERVER >>
@@ -191,18 +243,21 @@ function getAllParts() {
 // ------------------
 const initialiseDOM = async () => {
     try {
-        $(document).ready(function () {
-            $('.materialboxed').materialbox();
-            $('#formSubmit').click(() => { formSubmitted(); });
-            $('#searchSubmit').click(() => { searchSubmitted(ALL_PARTS_ARRAY, COMPONENT_COUNT); });
-            $('.modal').modal();
-        });
         const ALL_PARTS_ARRAY = await getAllParts(); // CREATE ARRAY OF ALL OBJECTS IN THE PARTS COLLECTION
         const ALL_COMPONENTS_ARRAY = ALL_PARTS_ARRAY.map(part => part.partFamily); // CREATE ARRAY OF ALL COMPONENTS IN THE PARTS COLLECTION E.G. { wing, fuselage, wing }
         const COMPONENT_COUNT = countValidParts(ALL_COMPONENTS_ARRAY); // CREATE OBJECT OF ALL COMPONENTS AND THEIR COUNT IN PARTS COLLECTION E.G. { wing: 2, fuselage: 3 }
-
         populateTable(COMPONENT_COUNT, ""); // CREATE COMPONENT TABLE WITH COUNT OF DIFFERENT COMPONENTS
         addCards(ALL_PARTS_ARRAY); // CREATE A CARD FOR EACH PART IN COLLECTION
+
+        $(document).ready(function () {
+            $('.materialboxed').materialbox();
+            $('#formSubmit').click(() => { formSubmitted(); });
+            $('#searchSubmit').click(() => { 
+                createFilterButtonsBasedOnSearchInput(ALL_PARTS_ARRAY);
+                updateDisplayBasedOnFilters(ALL_PARTS_ARRAY);
+            });
+            $('.modal').modal();
+        });
 
     } catch (error) {
         console.error(error);
