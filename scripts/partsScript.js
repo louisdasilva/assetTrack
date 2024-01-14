@@ -96,18 +96,20 @@ const formSubmitted = () => {
 
 // FILTER & DISPLAY SEARCH INFORMATION
 // -----------------------------------
-const searchSubmitted = (allParts) => {
+const searchSubmitted = (allParts, componentCount) => {
     let cardsSection = $('#card-section'); // GET CARD SECTION
     cardsSection.empty(); // CHANGE CARD SECTION TO EMPTY
     
     searchInput = $('#searchInput').val(); // GET USER SEARCH INPUT
     const FILTERED_PARTS_ARRAY = allParts.filter(part => part.partFamily === searchInput); // CREATE ARRAY OF PARTS MATCHING SEARCH INPUT
+    const FILTERED_COMPONENTS_COUNT = { [searchInput]: FILTERED_PARTS_ARRAY.length };
     let filterLabel = (`${searchInput}`); // ASSIGN FILTER LABEL BASED ON SEARCH INPUT
     $('#removeFilterBtn').html(`<i class="material-icons left">close</i>${filterLabel}`); // UPDATE FILTER BUTTON TO INCLUDE NEW FILTER LABEL
     
-    addCards(FILTERED_PARTS_ARRAY); // ADD ONLY FILTERED CARDS
+    populateTable(FILTERED_COMPONENTS_COUNT); // CREATE TABLE WITH FILTERED COMPONENTS
+    addCards(FILTERED_PARTS_ARRAY); // ADD FILTERED CARDS
 
-    // SHOW OR HIDE FILTER INFO BASED ON ANY SEARCH INPUT
+    // SHOW OR HIDE FILTER INFO BASED ON SEARCH INPUT
     if (searchInput == "") {
         $('#removeFilterBtn').hide();
         $('#filterLabel').hide();
@@ -122,7 +124,8 @@ const searchSubmitted = (allParts) => {
         $('#filterLabel').hide(); // HIDE FILTER LABEL
         $('#removeFilterBtn').hide(); // HIDE FILTER BUTTON
         cardsSection.empty(); // CHANGE CARD SECTION TO EMPTY
-        addCards(allParts);  // ADD ALL CARDS FROM COLLECTION
+        populateTable(componentCount, ""); // CREATE TABLE WITH ALL COMPONENTS FROM COLLECTION
+        addCards(allParts);  // ADD CARD FOR ALL PARTS FROM COLLECTION
     });
 
     $('#searchModal').modal('close'); // CLOSE SEARCH MODAL
@@ -191,7 +194,7 @@ const initialiseDOM = async () => {
         $(document).ready(function () {
             $('.materialboxed').materialbox();
             $('#formSubmit').click(() => { formSubmitted(); });
-            $('#searchSubmit').click(() => { searchSubmitted(ALL_PARTS_ARRAY); });
+            $('#searchSubmit').click(() => { searchSubmitted(ALL_PARTS_ARRAY, COMPONENT_COUNT); });
             $('.modal').modal();
         });
         const ALL_PARTS_ARRAY = await getAllParts(); // CREATE ARRAY OF ALL OBJECTS IN THE PARTS COLLECTION
