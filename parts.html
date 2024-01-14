@@ -26,7 +26,7 @@
 						<p class="flow-text">Click the Button below to Add Parts to the Tracking System.</p>				
 						<div class="col s6 right-align">
 							<a class="waves-effect waves-light btn modal-trigger common-button-style" href="#searchModal">
-								<i class="material-icons left">search</i> Search Part
+								<i class="material-icons left">search</i> Search
 							</a>
 						</div>
 						<div class="col s6 left-align">
@@ -34,12 +34,10 @@
 								<i class="material-icons left">auto_fix_high</i>Add Part
 							</a>
 						</div>
-						<div class="col s12 center-align">
+						<div class="col s12 center-align filter-info-container">
 							<!-- FILTER INFORMATION -->
-							<h6 id="filterLabel" class="filter-label">Filters:</h6>
-							<button id="removeFilterBtn" class="waves-effect waves-light btn-small remove-filter-btn">
-								<i class="material-icons left">close</i>
-							</button>
+							<h5 id="filterLabel" class="filter-label">Filters:</h5>
+							<div id="filterButtonsContainer" class="filter-buttons-container"></div>
 							<!-- DYNAMIC DATABASE TABLE SUMMARY -->
 							<div id="table"></div>
 						</div>
@@ -51,11 +49,11 @@
 			<!-- SEARCH PART MODAL -->
 			<div id="searchModal" class="modal">
 				<div class="modal-content">
-					<h4>Search Part</h4>
+					<h4>Search Component</h4>
 					<!-- Search Input -->
 					<div class="input-field">
 						<input type="text" id="searchInput" class="validate">
-						<label for="searchInput">Enter your search term</label>
+						<label for="searchInput">Enter your search term - for example "wing", "engine" or "fuselage"</label>
 					</div>
 				</div>
 				<div class="modal-footer">
