@@ -24,20 +24,47 @@
 					<div class="col s12 center-align">
 						<h1 id="heading">Asset Track Parts Managment System</h1>
 						<p class="flow-text">Click the Button below to Add Parts to the Tracking System.</p>				
-						<div class="col s12 center-align">
-							<a class="waves-effect waves-light btn click-me-button modal-trigger" id="clickMeButton" data-target="modal1"><i class="material-icons left">auto_fix_high</i>Add Part</a>
+						<div class="col s6 right-align">
+							<a class="waves-effect waves-light btn modal-trigger common-button-style" href="#searchModal">
+								<i class="material-icons left">search</i> Search Part
+							</a>
 						</div>
-						<!-- DYNAMIC DATABASE TABLE SUMMARY -->
+						<div class="col s6 left-align">
+							<a class="waves-effect waves-light btn click-me-button modal-trigger common-button-style" id="clickMeButton" data-target="modal1">
+								<i class="material-icons left">auto_fix_high</i>Add Part
+							</a>
+						</div>
 						<div class="col s12 center-align">
+							<!-- FILTER INFORMATION -->
+							<h6 id="filterLabel" class="filter-label">Filters:</h6>
+							<button id="removeFilterBtn" class="waves-effect waves-light btn-small remove-filter-btn">
+								<i class="material-icons left">close</i>
+							</button>
+							<!-- DYNAMIC DATABASE TABLE SUMMARY -->
 							<div id="table"></div>
 						</div>
-						<!-- END DYNAMIC DATABASE TABLE SUMMARY -->
 					</div>
 				</div>
 				<div class="row" id="card-section">
 				</div>
 			</div>
-			<!-- PART CREATION MODAL -->
+			<!-- SEARCH PART MODAL -->
+			<div id="searchModal" class="modal">
+				<div class="modal-content">
+					<h4>Search Part</h4>
+					<!-- Search Input -->
+					<div class="input-field">
+						<input type="text" id="searchInput" class="validate">
+						<label for="searchInput">Enter your search term</label>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+					<a href="#!" class="waves-effect waves-green btn-flat" id="searchSubmit">Search</a>
+				</div>
+			</div>
+			<!-- END SEARCH PART MODAL -->
+			<!-- ADD PART MODAL -->
 			<div id="modal1" class="modal modal-fixed-footer">
 				<div class="row modal-content">
 					<form class="col s12">
@@ -79,7 +106,7 @@
 					</form>
 				</div>
 			</div>
-			<!-- END PART CREATION MODAL -->
+			<!-- END ADD PART MODAL -->
 		</main>
 
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>

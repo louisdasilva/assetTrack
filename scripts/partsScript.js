@@ -1,10 +1,11 @@
+let searchInput = {};
 
 // ARRAY OF ALL VALID PART FAMILIES -> GLOABL SCOPE AS USED BY MULTIPLE METHODS
-const validParts = [ "wing" , "fuselage" , "tail" , "engine" , "landing gear" , "cockpit" ];
+const VALID_PARTS = [ "wing" , "fuselage" , "tail" , "engine" , "landing gear" , "cockpit" ];
 
 // COUNT TOTAL NUMBER OF VALID PARTS PER PART FAMILY
 function countValidParts(arr) {
-    const partCount = {};
+    let partCount = {};
 
     arr.forEach((part) => {
         if (part != "") {
@@ -13,7 +14,7 @@ function countValidParts(arr) {
                 lowerCasePart = part.toLowerCase(); //lowercase to match the static validParts array.
             }
     
-            if (validParts.includes(lowerCasePart)) {
+            if (VALID_PARTS.includes(lowerCasePart)) {
                 // Use lowerCasePart string to index the array - use || 0 as default if null etc. and increment count
                 partCount[lowerCasePart] = (partCount[lowerCasePart] || 0) + 1;
             }
@@ -54,7 +55,7 @@ const addCards = (items) => {
         if(item.partFamily == null || item.partFamily == undefined || item.partFamily == "") { /*console.log("Null, Undefined OR Empty Card subTitle")*/ }
         else {
             let lowerCasePart = item.partFamily.toLowerCase(); //lowercase to match the static validParts array.
-            if (validParts.includes(lowerCasePart)) {
+            if (VALID_PARTS.includes(lowerCasePart)) {
                 let itemToAppend = document.createElement('div');
                 itemToAppend.innerHTML = '<div class="col s4 center-align">'+
                         '<div class="card medium"><div class="card-image waves-effect waves-block waves-light"><img class="activator" src="images/'+item.path+'">'+
@@ -92,6 +93,45 @@ const formSubmitted = () => {
     // CALL METHOD TO POST FORM DATA TO SERVER
     postPart(formData);
 }
+
+// FILTER & DISPLAY SEARCH INFORMATION
+// -----------------------------------
+const searchSubmitted = (allParts, componentCount) => {
+    let cardsSection = $('#card-section'); // GET CARD SECTION
+    cardsSection.empty(); // CHANGE CARD SECTION TO EMPTY
+    
+    searchInput = $('#searchInput').val(); // GET USER SEARCH INPUT
+    const FILTERED_PARTS_ARRAY = allParts.filter(part => part.partFamily === searchInput); // CREATE ARRAY OF PARTS MATCHING SEARCH INPUT
+    const FILTERED_COMPONENTS_COUNT = { [searchInput]: FILTERED_PARTS_ARRAY.length };
+    let filterLabel = (`${searchInput}`); // ASSIGN FILTER LABEL BASED ON SEARCH INPUT
+    $('#removeFilterBtn').html(`<i class="material-icons left">close</i>${filterLabel}`); // UPDATE FILTER BUTTON TO INCLUDE NEW FILTER LABEL
+    
+    populateTable(FILTERED_COMPONENTS_COUNT); // CREATE TABLE WITH FILTERED COMPONENTS
+    addCards(FILTERED_PARTS_ARRAY); // ADD FILTERED CARDS
+
+    // SHOW OR HIDE FILTER INFO BASED ON SEARCH INPUT
+    if (searchInput == "") {
+        $('#removeFilterBtn').hide();
+        $('#filterLabel').hide();
+    }
+    else {
+        $('#removeFilterBtn').show();
+        $('#filterLabel').show();
+    }
+
+    // FILTER BUTTON ONCLICK 
+    $('#removeFilterBtn').click(() => {
+        $('#filterLabel').hide(); // HIDE FILTER LABEL
+        $('#removeFilterBtn').hide(); // HIDE FILTER BUTTON
+        cardsSection.empty(); // CHANGE CARD SECTION TO EMPTY
+        populateTable(componentCount, ""); // CREATE TABLE WITH ALL COMPONENTS FROM COLLECTION
+        addCards(allParts);  // ADD CARD FOR ALL PARTS FROM COLLECTION
+    });
+
+    $('#searchModal').modal('close'); // CLOSE SEARCH MODAL
+}
+
+
 
 // << SEND POST REQUEST TO SERVER >>
 // ---------------------------------
@@ -135,33 +175,38 @@ function removeCard(cardId) {
 
 // << SEND REQUEST TO RETRIEVE ALL PARTS FROM SERVER >>
 // ----------------------------------------------------
-function getAllParts(){
-    $.get('/api/parts', (response) => {
-        if (response.statusCode === 200) {
-            // RESPONSE DATA IS AN ARRAY OF ALL DATA IN THE COLLECTION -> (response.data)
-            // MAP METHOD -> CREATES NEW ARRAY CALLED 'partTypeArray' WHICH INCLUDES THE partFamily PROPERTY FROM EACH OBJECT IN COLLECTION
-            const partTypeArray = response.data.map(part => part.partFamily);
-            // CALCULATE & STORE THE NUMBER OF OCCURENCES FOR EACH VALID PART TYPE IN partTypeArray
-            const partCount = countValidParts(partTypeArray);
-            // CALL METHOD TO CREATE PART TYPE TABLE WITH THE NEW COUNT OF DIFFERENT PART TYPES -> partCount
-            populateTable(partCount,"");
-            // CALL METHOD TO CREATE CARDS FOR EACH PART
-            addCards(response.data);
-        }
-        else { console.log ("Failed to execute getAllParts"); }
+function getAllParts() {
+    return new Promise((resolve, reject) => {
+        $.get('/api/parts', (response) => {
+            if (response.statusCode === 200) {
+                resolve(response.data);
+            } else {
+                reject(new Error("Failed to execute getAllParts"));
+            }
+        });
     });
 }
 
 // << MAIN METHIOD >>
 // ------------------
-const initialiseDOM = () => {
-    // INITIALISE & EXECUTE FUNCTIONS WHEN PAGE HAS LOADED
-    $(document).ready(function () {
-        $('.materialboxed').materialbox();
-        $('#formSubmit').click(() => { formSubmitted(); });
-        $('.modal').modal();
-        getAllParts();
-    });
+const initialiseDOM = async () => {
+    try {
+        $(document).ready(function () {
+            $('.materialboxed').materialbox();
+            $('#formSubmit').click(() => { formSubmitted(); });
+            $('#searchSubmit').click(() => { searchSubmitted(ALL_PARTS_ARRAY, COMPONENT_COUNT); });
+            $('.modal').modal();
+        });
+        const ALL_PARTS_ARRAY = await getAllParts(); // CREATE ARRAY OF ALL OBJECTS IN THE PARTS COLLECTION
+        const ALL_COMPONENTS_ARRAY = ALL_PARTS_ARRAY.map(part => part.partFamily); // CREATE ARRAY OF ALL COMPONENTS IN THE PARTS COLLECTION E.G. { wing, fuselage, wing }
+        const COMPONENT_COUNT = countValidParts(ALL_COMPONENTS_ARRAY); // CREATE OBJECT OF ALL COMPONENTS AND THEIR COUNT IN PARTS COLLECTION E.G. { wing: 2, fuselage: 3 }
+
+        populateTable(COMPONENT_COUNT, ""); // CREATE COMPONENT TABLE WITH COUNT OF DIFFERENT COMPONENTS
+        addCards(ALL_PARTS_ARRAY); // CREATE A CARD FOR EACH PART IN COLLECTION
+
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 // CHECK WHETHER MODULE OBJECT IS DEFINED
@@ -170,5 +215,7 @@ const initialiseDOM = () => {
 if (typeof module !== 'undefined') { module.exports = { countValidParts, countValidParts, addCards }; } // EXPORTS
 // << (browser environment) >>
 // ---------------------------
-else { initialiseDOM(); } // INITIALISE DOM
+else { 
+    initialiseDOM(); 
+} // INITIALISE DOM
 //The above conditional allows the same code to be used in both environments.
