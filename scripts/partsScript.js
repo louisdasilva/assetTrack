@@ -98,13 +98,13 @@ const formSubmitted = () => {
     postPart(formData);
 }
 
-// CREATE FILTER BUTTONS BASED ON SEARCH INPUT
-// -------------------------------------------
+// DYNAMICALLY CREATE FILTER BUTTONS BASED ON SEARCH INPUT
+// -------------------------------------------------------
 const createFilterButtonsBasedOnSearchInput = (allParts) => {
     searchInput = $('#searchInput').val(); // GET USER SEARCH INPUT
     
     if (!appliedFilters.includes(searchInput)) { // CHECK IF THE SEARCH INPUT IS ALREADY A FILTER
-        appliedFilters.push(searchInput); // ADD NEW INPUT TO LIST OF APPLIED FILTERS
+        appliedFilters.push(searchInput); // ADD NEW SEARCH INPUT TO LIST OF APPLIED FILTERS
         filterButtonsContainer.empty(); // REMOVE ALL FILTER BUTTONS
         // ADD ALL FILTER BUTTONS INCLUDING NEW INPUT
         appliedFilters.forEach(filter => {
@@ -121,11 +121,13 @@ const createFilterButtonsBasedOnSearchInput = (allParts) => {
                 cardsSection.empty(); // CHANGE CARD SECTION TO EMPTY
                 const FILTERED_PARTS_ARRAY = returnUserFilteredPartsInArray(allParts); // AN ARRAY OF PART OBJECTS
                 const FILTERED_COMPONENTS_COUNT = returnUserFilteredComponentsAndCountsAsObject(allParts); // E.G. {wing: 2, fuselage: 1}
-                populateTable(FILTERED_COMPONENTS_COUNT, ""); // CREATE TABLE WITH ALL COMPONENTS FROM COLLECTION
                 if (appliedFilters.length == 0) { // CHECK NO FILTERS ARE APPLIED
-                    addCards(allParts); // ADD ALL CARDS FROM COLLECTION
+                    location.reload(true); // REFRESH PAGE
                 }
-                else { addCards(FILTERED_PARTS_ARRAY); } // ADD CARDS MATCHING SEARCH INPUT FILTER FROM COLLECTION
+                else { 
+                    addCards(FILTERED_PARTS_ARRAY); // ADD CARDS MATCHING SEARCH INPUT FILTER FROM COLLECTION
+                    populateTable(FILTERED_COMPONENTS_COUNT, ""); // CREATE TABLE WITH ALL COMPONENTS FROM COLLECTION
+                }
             });
             filterButtonsContainer.append(filterButton); // APPEND ALL REMOVE FILTER BUTTONS TO CONTAINER IN HTML
         });
@@ -141,7 +143,7 @@ function updateDisplayBasedOnFilters(allParts) {
     const FILTERED_PARTS_ARRAY = returnUserFilteredPartsInArray(allParts);
     const FILTERED_COMPONENTS_COUNT = returnUserFilteredComponentsAndCountsAsObject(allParts);
     cardsSection.empty(); // REMOVE ALL CARDS FROM CARD SECTION
-    populateTable(FILTERED_COMPONENTS_COUNT); // CREATE TABLE WITH FILTERED COMPONENTS AND COUNTS
+    populateTable(FILTERED_COMPONENTS_COUNT, ""); // CREATE TABLE WITH FILTERED COMPONENTS AND COUNTS
     addCards(FILTERED_PARTS_ARRAY); // ADD FILTERED CARDS
 }
 
