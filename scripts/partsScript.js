@@ -100,7 +100,7 @@ const formSubmitted = () => {
 
 // DYNAMICALLY CREATE FILTER BUTTONS BASED ON SEARCH INPUT
 // -------------------------------------------------------
-const createFilterButtonsBasedOnSearchInput = (allParts, allComponents) => {
+const createFilterButtonsBasedOnSearchInput = (allParts) => {
     searchInput = $('#searchInput').val(); // GET USER SEARCH INPUT
     
     if (!appliedFilters.includes(searchInput)) { // CHECK IF THE SEARCH INPUT IS ALREADY A FILTER
@@ -255,7 +255,7 @@ const initialiseDOM = async () => {
             $('.materialboxed').materialbox();
             $('#formSubmit').click(() => { formSubmitted(); });
             $('#searchSubmit').click(() => { 
-                createFilterButtonsBasedOnSearchInput(ALL_PARTS_ARRAY, ALL_COMPONENTS_ARRAY);
+                createFilterButtonsBasedOnSearchInput(ALL_PARTS_ARRAY);
                 updateDisplayBasedOnFilters(ALL_PARTS_ARRAY);
             });
             $('.modal').modal();
