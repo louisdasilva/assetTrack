@@ -8,10 +8,13 @@
     <!-- Bootstrap CSS --> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <style> 
-        .col-md-12 { margin: 0 auto; }
         .container { 
             width: 100%;
             margin: 0 auto;
+        }
+        #userLogin {
+            background-color: #002060;
+            border-color: #002060;
         }
     </style>
     <!-- END Bootstrap CSS --> 
@@ -26,13 +29,13 @@
             <p>Welcome to assetTrack - Please sign in to continue:</p>
         </div>
         <div class="row mb-3">
-            <div class="col-md-4 d-flex align-items-center justify-content-end"> <label for="name" class="form-label">Username:</label> </div>
+            <div class="col-md-4 d-flex align-items-center justify-content-md-end"> <label for="name" class="form-label">Username:</label> </div>
             <div class="col-md-4"> <input type="text" class="form-control" id="userName" placeholder="Username"> </div> 
             <span id="nameInputFeedbackText" class="col-md-4 form-text"></span> 
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-4 d-flex align-items-center justify-content-end"> <label for="password" class="form-label">Password:</label> </div>
+            <div class="col-md-4 d-flex align-items-center justify-content-md-end"> <label for="password" class="form-label">Password:</label> </div>
             <div class="col-md-4"> <input type="password" class="form-control" id="userPassword" placeholder="Password"/> </div> 
             <span id="passwordInputFeedbackText" class="col-md-4 form-text"></span> 
         </div>
