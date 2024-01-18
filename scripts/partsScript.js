@@ -1,4 +1,4 @@
-
+const socket = io();
 let appliedFilters = [];
 let searchInput = {};
 let filterButtonsContainer = $('#filterButtonsContainer');
@@ -206,6 +206,7 @@ function postPart(part){
         },
         success: () => { 
             alert('Part Post Successful');
+            socket.emit('addPart', part.partFamily); // EMIT 'addPart' event to the server
             location.reload(true); // REFRESH PAGE
         }
     });
@@ -222,6 +223,7 @@ function removeCard(cardId) {
         success: () => {
             // REMOVE CARD FROM DOM 
             $(`.remove-card[data-card-id="${cardId}"]`).closest('.col').remove();
+            socket.emit('removePart', ""); // EMIT 'removePart' event to the server
             location.reload(true); // REFRESH PAGE
         }
     });
@@ -240,6 +242,16 @@ function getAllParts() {
         });
     });
 }
+
+// << WEBSOCKETS >>
+// Listen for 'partAdded' event from client.
+socket.on('partAdded', (part) => {
+    alert(`A Client Added A Part: "${part}". Refresh to see changes.`); //alert this client
+});
+// Listen for 'removePart' event from client
+socket.on('partRemoved', (part) => {
+    alert("A Client Removed A Part. Refresh to see changes.");  //alert this client
+});
 
 // << MAIN METHIOD >>
 // ------------------
