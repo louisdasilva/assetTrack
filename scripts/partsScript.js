@@ -205,8 +205,8 @@ function postPart(part){
             else { console.log('Error: ' + xhr.statusText); }
         },
         success: () => { 
-            // alert('Part Post Successful');
-            socket.emit('addPart', "Part Added"); // EMIT 'addPart' event to the server
+            alert('Part Post Successful');
+            socket.emit('addPart', part.partFamily); // EMIT 'addPart' event to the server
             location.reload(true); // REFRESH PAGE
         }
     });
@@ -223,7 +223,7 @@ function removeCard(cardId) {
         success: () => {
             // REMOVE CARD FROM DOM 
             $(`.remove-card[data-card-id="${cardId}"]`).closest('.col').remove();
-            socket.emit('removePart', "Part Removed"); // EMIT 'addPart' event to the server
+            socket.emit('removePart', ""); // EMIT 'removePart' event to the server
             location.reload(true); // REFRESH PAGE
         }
     });
@@ -244,16 +244,14 @@ function getAllParts() {
 }
 
 // << WEBSOCKETS >>
-// Listen for 'partAdded' event from client
+// Listen for 'partAdded' event from client.
 socket.on('partAdded', (part) => {
-    alert('Part Added'); //alert this client
+    alert(`A Client Added A Part: "${part}". Refresh to see changes.`); //alert this client
 });
 // Listen for 'removePart' event from client
 socket.on('partRemoved', (part) => {
-    alert('Part Removed');  //alert this client
+    alert("A Client Removed A Part. Refresh to see changes.");  //alert this client
 });
-
-
 
 // << MAIN METHIOD >>
 // ------------------
