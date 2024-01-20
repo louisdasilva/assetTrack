@@ -20,7 +20,7 @@ app.use(express.static(__dirname + '/'));
 app.use(express.json());
 
 //USE ROUTERS
-app.use('/', loginRouter);
+app.use('/login', loginRouter);
 app.use('/api', partRouter);
 
 // << SOCKETS >>
