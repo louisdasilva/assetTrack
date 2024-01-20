@@ -7,7 +7,6 @@ const getUser = async (req,res)  => {
 
     await user.getUser(userName, userPassword)
         .then(result => {
-            console.log(result);
             if(result == undefined){
                 return res.status(200).json({statusCode: 401, message: 'authorisation failed' });
             }
