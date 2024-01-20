@@ -78,26 +78,23 @@ function validateInput() {
 }
 
 function CheckCredentials(userName, userPassword) {
-    let url = SERVER_URL + 'login/userValidate/' + userName;
+    let url = SERVER_URL + 'login/userValidate/' + userName + '/' + userPassword;
     let formatNegative = "text-danger text center form-text";
-
     
-    $.get(url) //Here userName is used to GET the matching object with the same userName from the database.
+    $.get(url)
         .then(response => {
-            if (response.data == undefined) { //First we must check if a matching object was found.
-                alert("Username not found, try \n Username: admin \n Password: assetTrack1! \nAlert to be removed.");
+            if(response.statusCode == 500) {
                 loginFeedbackfield.className = formatNegative;
+                loginFeedbackfield.innerHTML = response.message + " please contact administrator for support.";
+            }
+            if(response.statusCode == 401) {
                 // Provide feedback - but don't let user know if username is correct for security.
-                loginFeedbackfield.innerHTML = "Username or Password does not match. If issue persists, please contact administrator for support.";
-            }
-            //NOW CHECK PASSWORD - Note checking for username is redundant as we already navigated to object with userName.
-            else if (userPassword === response.data.password) {
-                location.href = SERVER_URL + 'parts.html';
-            }
-            else {
-                alert("Password does not match, try \n Username: admin \n Password: assetTrack1! \nAlert to be removed.");
+                alert("Username not found, try \n Username: admin \n Password: assetTrack1! \nThis Dev Alert to be removed."); // *** TO DO *** REMOVE ALERT !!!
                 loginFeedbackfield.className = formatNegative;
                 loginFeedbackfield.innerHTML = "Username or Password does not match. If issue persists, please contact administrator for support.";
+            }
+            if(response.statusCode == 200) {
+                location.href = SERVER_URL + 'parts.html';
             }
         });
 }

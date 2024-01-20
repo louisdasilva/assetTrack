@@ -19,9 +19,14 @@ const partRouter = require('./routers/partsRouter');
 app.use(express.static(__dirname + '/'));
 app.use(express.json());
 
-//USE ROUTERS
+// MIDDLEWARE - ROUTERS
 app.use('/login', loginRouter);
 app.use('/api', partRouter);
+
+const base = `${__dirname}`;
+app.get('/home', (req,res) => {
+    res.sendFile(`${base}/home.html`);
+});
 
 // << SOCKETS >>
 // Listen For Client Connection
