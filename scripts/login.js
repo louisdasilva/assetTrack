@@ -1,4 +1,4 @@
-const SERVER_URL = 'http://localhost:3000/';
+const SERVER_URL = 'http://localhost:3000';
 let loginFeedbackfield = document.getElementById("loginFeedback");    
 
 function checkForInvalidCharacters(userInput) {
@@ -78,7 +78,7 @@ function validateInput() {
 }
 
 function CheckCredentials(userName, userPassword) {
-    let url = SERVER_URL + 'login/userValidate/' + userName + '/' + userPassword;
+    let url = SERVER_URL + '/login/userValidate/' + userName + '/' + userPassword;
     let formatNegative = "text-danger text center form-text";
     
     $.get(url)
@@ -94,7 +94,7 @@ function CheckCredentials(userName, userPassword) {
                 loginFeedbackfield.innerHTML = "Username or Password does not match. If issue persists, please contact administrator for support.";
             }
             if(response.statusCode == 200) {
-                location.href = SERVER_URL + 'parts.html';
+                location.href = SERVER_URL + '/parts';
             }
         });
 }
