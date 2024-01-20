@@ -78,7 +78,7 @@ function validateInput() {
 }
 
 function CheckCredentials(userName, userPassword) {
-    let url = SERVER_URL + 'userValidate/' + userName;
+    let url = SERVER_URL + 'login/userValidate/' + userName;
     let formatNegative = "text-danger text center form-text";
 
     
