@@ -1,5 +1,4 @@
 const port = process.env.PORT || 3000;
-const DIR = __dirname;
 
 // EXPRESS SETUP
 const express = require('express');
@@ -17,20 +16,12 @@ const loginRouter = require('./routers/loginRouter');
 const partRouter = require('./routers/partsRouter');
 
 // MIDDLEWARE
-app.use(express.static(DIR + '/'));
+app.use(express.static(__dirname + '/'));
 app.use(express.json());
 
-// MIDDLEWARE - ROUTERS
-app.use('/login', loginRouter);
+//USE ROUTERS
+app.use('/', loginRouter);
 app.use('/api', partRouter);
-
-// NAVIGATION - STATIC FILE SERVING
-app.get('/home', (req,res) => {
-    res.sendFile(`${DIR}/home.html`);
-});
-app.get('/parts', (req,res) => {
-    res.sendFile(`${DIR}/parts.html`);
-});
 
 // << SOCKETS >>
 // Listen For Client Connection
@@ -58,6 +49,8 @@ io.on( 'connection', (socket) => // event listener triggered when a new connecti
         console.log('Client '+socket.id+ ': disconnected from server');
     });
 });
+
+
 // << END SOCKETS >>
 
 // server listening
