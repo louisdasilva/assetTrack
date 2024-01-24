@@ -18,7 +18,7 @@ const loginRouter = require('./routers/loginRouter');
 const partRouter = require('./routers/partsRouter');
 
 // MIDDLEWARE
-app.use(express.static(DIR + '/'));
+app.use(express.static(__dirname + '/'));
 app.use(express.json());
 
 // MIDDLEWARE - ROUTERS
@@ -81,6 +81,8 @@ io.on( 'connection', (socket) => // event listener triggered when a new connecti
         console.log('Client '+socket.id+ ': disconnected from server');
     });
 });
+
+
 // << END SOCKETS >>
 
 // server listening
