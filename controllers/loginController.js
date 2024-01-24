@@ -1,17 +1,15 @@
 let user = require('../models/user.js');
 
-const getUser = async (req,res)  => {
-
+const loginUser = async (req,res) => {
     const userName = req.params.userName;
     const userPassword = req.params.userPassword;
-
-    await user.getUser(userName, userPassword)
+    await user.loginUser(userName, userPassword)
         .then(result => {
-            if(result == undefined){
-                return res.status(200).json({statusCode: 401, message: 'authorisation failed' });
+            if(result.statusCode == 401){
+                return res.status(200).json({statusCode: 401, message: 'Authorisation failed - contact admin' });
             }
-            if(result.username == userName){
-                return res.status(200).json({ statusCode: 200 });
+            if(result.statusCode == 200){
+                return res.status(200).json({ statusCode: 200, session:result.session });
             }
             else{
                 return res.status(500).json({statusCode: 500, message: 'Internal Server Failure' });
@@ -23,4 +21,12 @@ const getUser = async (req,res)  => {
         });
 };
 
-module.exports = {getUser};
+const authenticateSession = async (req,res) => {
+    sessionKey = req.params.session;
+    await user.authenticateSession(sessionKey)
+        .then(result => {
+            return res.send(result);
+        });
+};
+
+module.exports = {loginUser, authenticateSession};

@@ -94,7 +94,10 @@ function CheckCredentials(userName, userPassword) {
                 loginFeedbackfield.innerHTML = "Username or Password does not match. If issue persists, please contact administrator for support.";
             }
             if(response.statusCode == 200) {
-                location.href = SERVER_URL + '/parts';
+                // https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
+                const session = response.session;
+                localStorage.setItem("sK",session); // store the session key in browser local storage
+                location.href = SERVER_URL + '/parts?sk=' + session; // request parts page and provide session key to server
             }
         });
 }
