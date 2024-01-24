@@ -1,4 +1,5 @@
 const port = process.env.PORT || 3000;
+const SERVER_URL = `http://localhost:${port}`;
 const DIR = __dirname;
 
 // EXPRESS SETUP
@@ -22,14 +23,36 @@ app.use(express.json());
 
 // MIDDLEWARE - ROUTERS
 app.use('/login', loginRouter);
+app.use('/authenticate', loginRouter);
 app.use('/api', partRouter);
 
-// NAVIGATION - STATIC FILE SERVING
+// MIDDLEWARE - AUTHENTICATION
+const axios = require('axios');
+async function authenticate(req,res,next){
+    session = req.query.sk;
+    try{
+        const authentication = await axios.get(`${SERVER_URL}/authenticate/${session}`);
+        const authorised = authentication.data;
+        if(authorised){
+            next();
+            return
+        }
+        res.send("Session Expired! Please return to log in page and sign in.");
+    } catch (error) {
+        console.log("(!) 500: Server Authentication Error: ", error);
+        throw error;
+    };
+}
+
+// MIDDLEWARE - STATIC FILE SERVING
 app.get('/home', (req,res) => {
     res.sendFile(`${DIR}/home.html`);
 });
-app.get('/parts', (req,res) => {
+app.get('/parts', authenticate, (req,res) => {
     res.sendFile(`${DIR}/parts.html`);
+});
+app.get('*', (req,res) => { // any navigation attempt to anything other than the above provided paths will return to index/login.
+	res.sendFile(`${DIR}/index.html`);
 });
 
 // << SOCKETS >>
