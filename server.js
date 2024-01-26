@@ -51,6 +51,9 @@ app.get('/home', (req,res) => {
 app.get('/parts', authenticate, (req,res) => {
     res.sendFile(`${DIR}/parts.html`);
 });
+app.get('/template', authenticate, (req,res) => {
+    res.sendFile(`${DIR}/template.html`);
+})
 app.get('*', (req,res) => { // any navigation attempt to anything other than the above provided paths will return to index/login.
 	res.sendFile(`${DIR}/index.html`);
 });
