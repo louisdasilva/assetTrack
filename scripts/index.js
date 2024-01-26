@@ -6,6 +6,11 @@ function getSession() {
 	return session;
 }
 
+function cataloguePage() {
+	const session = getSession();
+	location.href = SERVER_URL + '/catalogue?sk=' + session; // request page at server endpoint that matches INPUT SERVER ENDPOINT HERE!
+}
+
 function dashboardPage() {
 	const session = getSession();
 	location.href = SERVER_URL + '/dash?sk=' + session; // request page at server endpoint that matches INPUT SERVER ENDPOINT HERE!
