@@ -51,8 +51,8 @@ app.get('/dash', authenticate, (req,res) => {
 app.get('/home', (req,res) => {
     res.sendFile(`${DIR}/home.html`);
 });
-app.get('/parts', authenticate, (req,res) => {
-    res.sendFile(`${DIR}/parts.html`);
+app.get('/inventory', authenticate, (req,res) => {
+    res.sendFile(`${DIR}/inventory.html`);
 });
 app.get('/template', authenticate, (req,res) => {
     res.sendFile(`${DIR}/template.html`);
