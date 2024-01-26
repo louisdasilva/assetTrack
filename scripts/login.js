@@ -97,7 +97,7 @@ function CheckCredentials(userName, userPassword) {
                 // https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
                 const session = response.session;
                 localStorage.setItem("sK",session); // store the session key in browser local storage
-                location.href = SERVER_URL + '/parts?sk=' + session; // request parts page and provide session key to server
+                location.href = SERVER_URL + '/dash?sk=' + session; // request parts page and provide session key to server
             }
         });
 }
