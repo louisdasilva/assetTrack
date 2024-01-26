@@ -45,6 +45,9 @@ async function authenticate(req,res,next){
 }
 
 // MIDDLEWARE - STATIC FILE SERVING
+app.get('/dash', authenticate, (req,res) => {
+    res.sendFile(`${DIR}/dashboard.html`);
+});
 app.get('/home', (req,res) => {
     res.sendFile(`${DIR}/home.html`);
 });
