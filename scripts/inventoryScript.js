@@ -70,6 +70,7 @@ const addCards = (items) => {
                         '<p class="card-text">'+item.description+'</p>'+
                         '</div>'+
                         '<div class="card-action">'+
+                        `<button class="btn update-card" style="margin-right: 10px;" data-card-id="${item._id}">Update</button>`+
                         `<button class="btn remove-card" data-card-id="${item._id}">Remove</button>`+
                         '</div>'+
                         '</div></div>';
@@ -85,6 +86,68 @@ const addCards = (items) => {
         });
     });
 };
+
+
+function resetFormInput() {
+    // Grab input elements
+    let partName = $('#partName');
+    let partFamily = $('#partFamily');
+    let partNumber = $('#partNumber');
+    let partPath = $('#path');
+    let partDescription = $('#description');
+    // Clear input values
+    partName.val('');
+    partFamily.val('');
+    partNumber.val('');
+    partPath.val('');
+    partDescription.val('');
+    // Remove highlighting and focus by updating CSS classes
+    partName.removeClass('valid');
+    partFamily.removeClass('valid');
+    partNumber.removeClass('valid');
+    partPath.removeClass('valid');
+    partDescription.removeClass('valid');
+    partName.removeClass('invalid');
+    partFamily.removeClass('invalid');
+    partNumber.removeClass('invalid');
+    partPath.removeClass('invalid');
+    partDescription.removeClass('invalid');
+    // Reset Input Heading Placement
+    M.updateTextFields();
+}
+
+
+function openForm(items) {
+
+    let partName = document.getElementById('partName');
+    let partFamily = document.getElementById('partFamily');
+    let partNumber = document.getElementById('partNumber');
+    let partPath = document.getElementById('path');
+    let partDescription = document.getElementById('description');
+
+    // Listen for update card click
+    document.querySelectorAll('.update-card').forEach(button => {
+        button.addEventListener('click', function() {
+            const CARD_ID = this.getAttribute('data-card-id');
+            const CARD_DETAILS = items.find(item => item._id == CARD_ID);
+
+            partName.value = CARD_DETAILS.partName;
+            partFamily.value = CARD_DETAILS.partFamily;
+            partNumber.value = CARD_DETAILS.partNumber;
+            partPath.value = CARD_DETAILS.path;
+            partDescription.value = CARD_DETAILS.description;
+
+            // Use Materialize method to open the modal
+            let instance = M.Modal.getInstance(document.getElementById('modal1'));
+            instance.open();
+
+            partName.focus(); partFamily.focus(); partNumber.focus(); partPath.focus(); partDescription.focus();
+            partName.blur(); partFamily.blur(); partNumber.blur(); partPath.blur(); partDescription.blur();
+        });
+    });
+}
+
+
 
 // EXTRACT CLIENT FORM INPUT INFORMATION
 const formSubmitted = () => {
@@ -262,10 +325,16 @@ const initialiseDOM = async () => {
         const COMPONENT_COUNT = countValidParts(ALL_COMPONENTS_ARRAY); // CREATE OBJECT OF ALL COMPONENTS AND THEIR COUNT IN PARTS COLLECTION E.G. { wing: 2, fuselage: 3 }
         populateTable(COMPONENT_COUNT, ""); // CREATE COMPONENT TABLE WITH COUNT OF DIFFERENT COMPONENTS
         addCards(ALL_PARTS_ARRAY); // CREATE A CARD FOR EACH PART IN COLLECTION
+        openForm(ALL_PARTS_ARRAY);
 
         $(document).ready(function () {
             $('.materialboxed').materialbox();
-            $('#formSubmit').click(() => { formSubmitted(); });
+            $('#formSubmit').click(() => { 
+                formSubmitted(); 
+            });
+            $('#clickMeButton').click(() => { 
+                resetFormInput();
+            });
             $('#searchSubmit').click(() => { 
                 createFilterButtonsBasedOnSearchInput(ALL_PARTS_ARRAY);
                 updateDisplayBasedOnFilters(ALL_PARTS_ARRAY);
