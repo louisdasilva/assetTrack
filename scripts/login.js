@@ -1,4 +1,3 @@
-const SERVER_URL = 'http://localhost:3000';
 let loginFeedbackfield = document.getElementById("loginFeedback");    
 
 function checkForInvalidCharacters(userInput) {
