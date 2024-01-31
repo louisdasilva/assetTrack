@@ -7,6 +7,7 @@ let controller = require('../controllers/partsController');
 
 // << DEFINE ROUTE HANDLERS >>
 router.post('/part', (req,res) => { controller.postPart(req,res); });
+router.put('/part/:id', (req, res) => { controller.updatePart(req, res); });
 router.get('/parts', (req,res) => { controller.getAllParts(req,res); });
 router.delete('/part/:id', (req,res) => { controller.deletePart(req,res); });
 

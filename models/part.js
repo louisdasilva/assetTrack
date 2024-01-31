@@ -26,6 +26,32 @@ async function postPart(part, callback) {
         }
 }
 
+// << METHOD: UPDATE PART IN DATABASE >>
+// -------------------------------------
+async function updatePart(partID, updatedPart, callback) {
+    try {
+        // UPDATE PART IN COLLECTION
+        const result = await collection.updateOne(
+            { _id: new ObjectId(partID) },
+            { $set: updatedPart }
+        );
+
+        // CALLBACK: OBJECT SUCCESSFULLY UPDATED IN DB
+        if (result.matchedCount > 0) {
+            console.log('Part Updated Successfully');
+            callback(null, { statusCode: 200, message: 'Part updated successfully' });
+        } 
+        // CALLBACK: ID NOT FOUND IN DB
+        else {
+            console.log('Part not found');
+            callback({ statusCode: 404, message: 'Part not found' }, null);
+        }
+    } catch (error) {
+        console.error('Error updating part:', error);
+        callback({ statusCode: 500, message: 'Internal Server Error' }, null);
+    }
+}
+
 // << METHOD: DELETE PART FROM DATABASE >>
 // ---------------------------------------
 async function deletePart(partID, callback) {
@@ -60,4 +86,4 @@ function getAllParts(callback) {
 }
 
 //EXPORTS
-module.exports = {postPart, getAllParts, deletePart}
+module.exports = {postPart, getAllParts, deletePart, updatePart}
