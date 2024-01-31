@@ -1,114 +1,113 @@
 <html>
-	<head>
-		<title>AssetTrack Parts</title>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" >
-		<link rel="stylesheet" href="stylesheets/parts.css">	  
-	</head>
-	<body>
-		<!-- NAVIGATION BAR-->
-		<nav>
-			<div class="nav-wrapper navbar-size">
-				<ul id="nav-mobile" class="hide-on-med-and-down">
-					<button type="button" class="btn btn-primary me-1 dataButton" id="navButton_to_dashboard" onclick="dashboardPage()">Home</button>
-					<button type="button" class="btn btn-primary me-1 dataButton" id="navButton_to_catalogue" onclick="cataloguePage()">Parts Catalogue</button>
-				</ul>
+<head>
+	<title>assetTrack - Inventory</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" >
+	<link rel="stylesheet" href="stylesheets/parts.css">	  
+</head>
+<body>
+	<!-- NAVIGATION BAR-->
+	<nav>
+		<div class="row mb-3">
+			<div class="col-md-12 text-center" id="pageNavbar"> 
+			<!-- NAVBAR ADDED BY INDEX.JS -->
 			</div>
-		</nav>
-		<!-- END NAVIGATION BAR -->
-		<main class="main-body">
-			<div class="container">
-				<div class="row">
-					<div class="col s12 center-align">
-						<h1 id="heading">Asset Track Parts Management System</h1>
-						<p class="flow-text">Click the Button below to Add Parts to the Tracking System.</p>				
-						<div class="col s6 right-align">
-							<a class="waves-effect waves-light btn modal-trigger common-button-style" href="#searchModal">
-								<i class="material-icons left">search</i> Search
-							</a>
-						</div>
-						<div class="col s6 left-align">
-							<a class="waves-effect waves-light btn click-me-button modal-trigger common-button-style" id="clickMeButton" data-target="modal1">
-								<i class="material-icons left">auto_fix_high</i>Add Part
-							</a>
-						</div>
-						<div class="col s12 center-align filter-info-container">
-							<!-- FILTER INFORMATION -->
-							<h5 id="filterLabel" class="filter-label">Filters:</h5>
-							<div id="filterButtonsContainer" class="filter-buttons-container"></div>
-							<!-- DYNAMIC DATABASE TABLE SUMMARY -->
-							<div id="table"></div>
-						</div>
+		</div>
+	</nav>
+	<!-- END NAVIGATION BAR -->
+	<main class="main-body">
+		<div class="container">
+			<div class="row">
+				<div class="col s12 center-align">
+					<h1 id="heading">Asset Track Parts Management System</h1>
+					<p class="flow-text">Click the Button below to Add Parts to the Tracking System.</p>				
+					<div class="col s6 right-align">
+						<a class="waves-effect waves-light btn modal-trigger common-button-style" href="#searchModal">
+							<i class="material-icons left">search</i> Search
+						</a>
+					</div>
+					<div class="col s6 left-align">
+						<a class="waves-effect waves-light btn click-me-button modal-trigger common-button-style" id="clickMeButton" data-target="modal1">
+							<i class="material-icons left">auto_fix_high</i>Add Part
+						</a>
+					</div>
+					<div class="col s12 center-align filter-info-container">
+						<!-- FILTER INFORMATION -->
+						<h5 id="filterLabel" class="filter-label">Filters:</h5>
+						<div id="filterButtonsContainer" class="filter-buttons-container"></div>
+						<!-- DYNAMIC DATABASE TABLE SUMMARY -->
+						<div id="table"></div>
 					</div>
 				</div>
-				<div class="row" id="card-section">
+			</div>
+			<div class="row" id="card-section">
+			</div>
+		</div>
+		<!-- SEARCH PART MODAL -->
+		<div id="searchModal" class="modal">
+			<div class="modal-content">
+				<h4>Search Component</h4>
+				<!-- Search Input -->
+				<div class="input-field">
+					<input type="text" id="searchInput" class="validate">
+					<label for="searchInput">Enter your search term - for example "wing", "engine" or "fuselage"</label>
 				</div>
 			</div>
-			<!-- SEARCH PART MODAL -->
-			<div id="searchModal" class="modal">
-				<div class="modal-content">
-					<h4>Search Component</h4>
-					<!-- Search Input -->
-					<div class="input-field">
-						<input type="text" id="searchInput" class="validate">
-						<label for="searchInput">Enter your search term - for example "wing", "engine" or "fuselage"</label>
+			<div class="modal-footer">
+				<a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+				<a href="#!" class="waves-effect waves-green btn-flat" id="searchSubmit">Search</a>
+			</div>
+		</div>
+		<!-- END SEARCH PART MODAL -->
+		<!-- ADD PART MODAL -->
+		<div id="modal1" class="modal modal-fixed-footer">
+			<div class="row modal-content">
+				<form class="col s12">
+					<div class="row">
+						<h1 class="heading">AssetTrack</h1>
+						<div class="col s12">
+							<!-- <img class="materialboxed materialboxed-image" src=""> -->
+						</div>
+						<div class="input-field col s4">
+							<input id="partName" type="text" class="validate">
+							<label for="partName">Part Name</label>
+						</div>
+						<div class="input-field col s4">
+							<input id="partNumber" type="text" class="validate">
+							<label for="partNumber">Part Number</label>
+						</div>
+						<div class="input-field col s4">
+							<input id="partFamily" type="text" class="validate">
+							<label for="partFamily">Part Family</label>
+						</div>
 					</div>
-				</div>
-				<div class="modal-footer">
-					<a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
-					<a href="#!" class="waves-effect waves-green btn-flat" id="searchSubmit">Search</a>
-				</div>
+					<div class="row">
+						<div class="input-field col s12">
+							<input id="path" type="text" class="validate">
+							<label for="path">Part Image Path</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s12">
+							<input id="description" type="text" class="validate">
+							<label for="description">Description</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s12 center-align">
+							<a class="waves-effect waves-light btn" id="formSubmit">Submit</a>
+						</div>
+					</div>
+				</form>
 			</div>
-			<!-- END SEARCH PART MODAL -->
-			<!-- ADD PART MODAL -->
-			<div id="modal1" class="modal modal-fixed-footer">
-				<div class="row modal-content">
-					<form class="col s12">
-						<div class="row">
-							<h1 class="heading">AssetTrack</h1>
-							<div class="col s12">
-								<!-- <img class="materialboxed materialboxed-image" src=""> -->
-							</div>
-							<div class="input-field col s4">
-								<input id="partName" type="text" class="validate">
-								<label for="partName">Part Name</label>
-							</div>
-							<div class="input-field col s4">
-								<input id="partNumber" type="text" class="validate">
-								<label for="partNumber">Part Number</label>
-							</div>
-							<div class="input-field col s4">
-								<input id="partFamily" type="text" class="validate">
-								<label for="partFamily">Part Family</label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="input-field col s12">
-								<input id="path" type="text" class="validate">
-								<label for="path">Part Image Path</label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="input-field col s12">
-								<input id="description" type="text" class="validate">
-								<label for="description">Description</label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="input-field col s12 center-align">
-								<a class="waves-effect waves-light btn" id="formSubmit">Submit</a>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-			<!-- END ADD PART MODAL -->
-		</main>
-        <footer class="footer" style='text-align:center;position:fixed;bottom:0;width:100%'></footer><!-- footer inserted by index.js -->
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-		<script src="./scripts/index.js"></script>
-		<script src="./scripts/inventoryScript.js"></script>
-	</body>
+		</div>
+		<!-- END ADD PART MODAL -->
+	</main>
+    <footer class="footer" style='text-align:center;position:fixed;bottom:0;width:100%'></footer><!-- footer inserted by index.js -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+	<script src="./scripts/index.js"></script>
+	<script src="./scripts/inventoryScript.js"></script>
+</body>
 </html>
