@@ -37,6 +37,9 @@ if(page != 'assetTrack - Catalogue'){
 if(page != 'assetTrack - Inventory'){
 	$('#pageNavbar').append('<button type="button" class="btn btn-primary me-1 dataButton" id="navButton_to_inventory" onclick="inventoryPage()">Inventory</button>');
 }
+if(page != 'assetTrack - opsInventory'){
+	$('#pageNavbar').append('<button type="button" class="btn btn-primary me-1 dataButton" id="navButton_to_opsInventory" onclick="opsInventoryPage()">Ops Inventory</button>');
+}
 
 // Appends a Footer to every webpage
 $('.footer').append("Copyright: AssetTrack 2024");
