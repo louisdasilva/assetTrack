@@ -3,6 +3,7 @@ let appliedFilters = [];
 let searchInput = {};
 let filterButtonsContainer = $('#filterButtonsContainer');
 let cardsSection = $('#card-section'); // GET CARD SECTION
+let cardID = "Empty";
 
 // ARRAY OF ALL VALID PART FAMILIES -> GLOABL SCOPE AS USED BY MULTIPLE METHODS
 const VALID_PARTS = [ "wing" , "fuselage" , "tail" , "engine" , "landing gear" , "cockpit" ];
@@ -87,7 +88,6 @@ const addCards = (items) => {
     });
 };
 
-
 function resetFormInput() {
     // Grab input elements
     let partName = $('#partName');
@@ -115,7 +115,6 @@ function resetFormInput() {
     // Reset Input Heading Placement
     M.updateTextFields();
 }
-
 
 function openForm(items) {
 
@@ -147,7 +146,26 @@ function openForm(items) {
     });
 }
 
+function getPartID(callback) {
+    document.querySelectorAll('.update-card').forEach(button => {
+        button.addEventListener('click', function() {
+            cardID = this.getAttribute('data-card-id');
+            console.log(cardID);
+            if (callback) {
+                callback(cardID);
+            }
+        });
+    });
 
+    const button = document.querySelector('#clickMeButton');
+    button.addEventListener('click', function() {
+        cardID = "NEW_PART";
+        console.log(cardID);
+        if (callback) {
+            callback(cardID);
+        }
+    });
+}
 
 // EXTRACT CLIENT FORM INPUT INFORMATION
 const formSubmitted = () => {
@@ -157,9 +175,19 @@ const formSubmitted = () => {
     // formData.partNumber = $('#partNumber').val(); //TODO
     formData.path = $('#path').val();
     formData.description = $('#description').val();
-    // CALL METHOD TO POST FORM DATA TO SERVER
-    postPart(formData);
+
+    if (cardID == "Empty") {
+        console.log("Error - Could not manage ID")
+    }
+    else if (cardID == "NEW_PART") {
+        postPart(formData);
+    }
+    else {
+        updatePart(cardID, formData);
+    }
+
 }
+
 
 // DYNAMICALLY CREATE FILTER BUTTONS BASED ON SEARCH INPUT
 // -------------------------------------------------------
@@ -208,6 +236,8 @@ function updateDisplayBasedOnFilters(allParts) {
     cardsSection.empty(); // REMOVE ALL CARDS FROM CARD SECTION
     populateTable(FILTERED_COMPONENTS_COUNT, ""); // CREATE TABLE WITH FILTERED COMPONENTS AND COUNTS
     addCards(FILTERED_PARTS_ARRAY); // ADD FILTERED CARDS
+    openForm(allParts);
+    getPartID();
 }
 
 function returnUserFilteredPartsInArray(allParts) {
@@ -249,7 +279,6 @@ function hideFilterButton(filterToRemove) {
     $(`.remove-filter-btn[data-filter="${filterToRemove}"]`).hide(); // HIDE FILTER BUTTON
 }
 
-
 // << SEND POST REQUEST TO SERVER >>
 // ---------------------------------
 function postPart(part){
@@ -271,6 +300,27 @@ function postPart(part){
             alert('Part Post Successful');
             socket.emit('addPart', part.partFamily); // EMIT 'addPart' event to the server
             location.reload(true); // REFRESH PAGE
+        }
+    });
+}
+
+function updatePart(cardID, formData) {
+    $.ajax({
+        url: `/api/part/${cardID}`, // Pass cardID in the URL
+        type: 'PUT', // Assuming you use PUT method for updates
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        error: (xhr) => {
+            if (xhr.status === 404) {
+                alert('ERROR: Part not found');
+            } else {
+                console.log('Error: ' + xhr.statusText);
+            }
+        },
+        success: () => {
+            alert('Part Update Successful');
+            socket.emit('updatePart', cardID); // Emit 'updatePart' event to the server
+            location.reload(true); // Refresh page
         }
     });
 }
@@ -326,6 +376,7 @@ const initialiseDOM = async () => {
         populateTable(COMPONENT_COUNT, ""); // CREATE COMPONENT TABLE WITH COUNT OF DIFFERENT COMPONENTS
         addCards(ALL_PARTS_ARRAY); // CREATE A CARD FOR EACH PART IN COLLECTION
         openForm(ALL_PARTS_ARRAY);
+        getPartID();
 
         $(document).ready(function () {
             $('.materialboxed').materialbox();

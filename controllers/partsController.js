@@ -41,6 +41,19 @@ const postPart = (req,res) => {
     }
 }
 
+const updatePart = (req, res) => {
+    let partID = req.params.id;
+    let updatedPart = req.body;
+
+    collection.updatePart(partID, updatedPart, (err, result) => {
+        if (err) {
+            res.status(err.statusCode).json(err);
+        } else {
+            res.json(result);
+        }
+    });
+};
+
 // << METHOD: GET ALL PARTS FROM DATABASE >>
 // -----------------------------------------
 const getAllParts = (req,res) => {
@@ -79,4 +92,4 @@ const deletePart = (req,res) =>
 }
 
 //EXPORTS
-module.exports = {postPart, getAllParts, deletePart}
+module.exports = {postPart, updatePart, getAllParts, deletePart}
