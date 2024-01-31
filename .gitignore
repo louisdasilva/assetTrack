@@ -1,2 +1,3 @@
 # ignore all .vs files
 *.vs
+node_modules
