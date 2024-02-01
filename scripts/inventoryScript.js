@@ -175,6 +175,7 @@ const formSubmitted = () => {
     // formData.partNumber = $('#partNumber').val(); //TODO
     formData.path = $('#path').val();
     formData.description = $('#description').val();
+
     if (cardID == "Empty") {
         console.log("Error - Could not manage ID")
     }
@@ -184,7 +185,9 @@ const formSubmitted = () => {
     else {
         updatePart(cardID, formData);
     }
+
 }
+
 
 // DYNAMICALLY CREATE FILTER BUTTONS BASED ON SEARCH INPUT
 // -------------------------------------------------------
