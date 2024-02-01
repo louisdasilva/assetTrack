@@ -1,25 +1,26 @@
 let loginFeedbackfield = document.getElementById("loginFeedback");    
 
-function checkForInvalidCharacters(userInput) {
-    // DEFINITIONS
-    const ALPHABET = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
-    'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-    const NUMBERS = ['0','1','2','3','4','5','6','7','8','9'];
+function checkForInvalidCharacters(userInput){
+    check = userInput.split('');
+    console.log(check);
     const SYMBOLS = ['!', '@', '#', '$', '%', '^', '&', '*', '_'];
-    const VALID_CHARACTERS = ALPHABET.concat(NUMBERS, SYMBOLS);
-    let match = false;
-    let isInvalidCharacter = false;
-    // ITERATE THROUGH EACH CHARACTER AND COMPARE WITH VALID CHARACTERS
-    userInput.split('').forEach(inputCharacter => {  
-        match = false;  
-        VALID_CHARACTERS.forEach(testCharacter => {
-            if(inputCharacter == testCharacter) { match = true; }
-        });
-        if(!match) { 
-            isInvalidCharacter = true; 
-        }  
-    });
-    return isInvalidCharacter;
+    for(item in check){
+        character = check[item]
+        if(character >= 'a' && character <= 'z'){
+            continue
+        }
+        if(character >= 'A' && character <= 'Z'){
+            continue
+        }
+        if(character >= '0' && character <= '9'){
+            continue
+        }
+        if(SYMBOLS.includes(character)){
+            continue
+        }
+        return true
+    }
+    return false;
 }
 
 function validateInput() {
