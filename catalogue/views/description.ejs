@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>part description</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/description.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="desc">
+        <div class="item">
+            <section class="image">
+                <img src="http://localhost:3000/<%= part.image %>" />
+            </section>
+            <section class="texts">
+                <p>
+                    Name:
+                    <span>
+                        <%= part.name %>
+                    </span>
+                </p>
+                <p>
+                    family:
+                    <span>
+                        <%= part.family %>
+                    </span>
+                </p>
+                <p>
+                    Number:
+                    <span>
+                        <%= part._id %>
+                    </span>
+                </p>
+                <p>
+                    Description:<br />
+                    <span class="tx">
+                        <%= part.description %>
+                    </span>
+                </p>
+            </section>
+            <form onsubmit="delPart(event, '<%= part._id %>')">
+                <button type="submit">remove</button>
+            </form>
+
+        </div>
+    </div>
+    <script>
+        function getSession() {
+            session = localStorage.getItem("sK");
+            return session;
+        }
+        const delPart = async (e, id) => {
+            try {
+                e.preventDefault();
+                await fetch(`/catalogue/part/${id}`, {
+                    method: "DELETE"
+                })
+                    .then(res => {
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            const session = getSession();
+                            location.href = '/catalogue?sk=' + session;
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    </script>
+</body>
+
+</html>

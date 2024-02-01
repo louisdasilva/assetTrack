@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+.main-body {
+    width: 100%;
+    height: 100%;
+}
+
+.main-body nav {
+    text-align: center;
+    padding-block: 1rem;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.container .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 1rem;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    position: relative;
+}
+
+.modal-content .close {
+    color: #aaaaaa;
+    position: absolute;
+    right: 1rem;
+    top: 0rem;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.modal-content .close:hover,
+.modal-content .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.formscontainer {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    margin-bottom: 2rem;
+}
+
+.formscontainer form {
+    box-shadow: 0 0 10px #333;
+    border-radius: .5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 30rem;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.formscontainer h2 {
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+.formscontainer input {
+    width: 100%;
+    padding: .5rem;
+    outline: none;
+    border: 0;
+    border-bottom: 1px solid #121212;
+}
+
+.formscontainer input[type="file"] {
+    border: 0;
+}
+
+.formscontainer input[type="submit"] {
+    border: 0;
+    background: #2196F3;
+    color: #fff;
+    text-transform: uppercase;
+    padding: .5rem;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.container .row {
+    display: flex;
+    justify-content: center;
+    place-items: center;
+}
+
+.row .col {
+    text-align: center;
+    display: grid;
+    gap: 1rem;
+}
+
+.col .heading {
+    color: #2196F3;
+    font-size: 2.5rem;
+}
+
+.col .btns button {
+    padding: .3rem;
+    width: 8rem;
+    outline: none;
+    border: 0;
+    cursor: pointer;
+    color: #fff;
+    background: #2196F3;
+    text-transform: uppercase;
+    margin-inline: 1rem;
+}
+
+.container #card-section {
+    height: 100%;
+    padding: 2rem 4rem;
+}
+
+#card-section .cards {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem .5rem;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    width: 300px;
+    text-align: center;
+    position: relative;
+    /* margin: auto; */
+}
+
+.card .trash {
+    position: absolute;
+    right: 0;
+    top: .3rem;
+}
+
+.card .trash form button {
+    padding: .4rem 1rem;
+    outline: none;
+    border: 0;
+    background: #d02f3c;
+    color: #fff;
+    cursor: pointer;
+}
+
+.card .image {
+    width: 100%;
+    height: 200px;
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card section {
+    display: flex;
+    justify-content: space-between;
+    padding: .3rem;
+}
+
+.card section .family {
+    color: grey;
+}
+
+.card .desc {
+    padding: .3rem;
+    /* background: red; */
+    max-height: 6rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* white-space: nowrap; */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.card .more {
+    padding: .5rem;
+    display: flex;
+    justify-content: end;
+}
+
+.more a {
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: .8rem;
+    background: #2196F3;
+    color: #fff;
+    padding: .3rem 1.5rem;
+}
