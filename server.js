@@ -54,22 +54,21 @@ async function authenticate(req, res, next) {
 }
 
 // MIDDLEWARE - STATIC FILE SERVING
-app.get('/catalogue', authenticate, (req,res) => {
-    res.sendFile(`${DIR}/catalogue.html`);
-})
-app.get('/dash', authenticate, (req,res) => {
+// app.get('/catalogue', (req,res) => {
+//     res.sendFile(`${DIR}/catalogue.html`);
+// })
+app.use("/catalogue", catalogueRoutes);
+
+app.get('/dash', authenticate, (req, res) => {
     res.sendFile(`${DIR}/dashboard.html`);
 });
 app.get('/home', (req, res) => {
     res.sendFile(`${DIR}/home.html`);
 });
-app.get('/inventory', authenticate, (req,res) => {
+app.get('/inventory', authenticate, (req, res) => {
     res.sendFile(`${DIR}/inventory.html`);
 });
-app.get('/opsInventory', authenticate, (req,res) => {
-    res.sendFile(`${DIR}/opsInventory.html`);
-})
-app.get('/template', authenticate, (req,res) => {
+app.get('/template', authenticate, (req, res) => {
     res.sendFile(`${DIR}/template.html`);
 })
 app.get('*', (req, res) => { // any navigation attempt to anything other than the above provided paths will return to index/login.
