@@ -23,6 +23,11 @@ function inventoryPage() {
     location.href = SERVER_URL + '/inventory?sk=' + session;
 }
 
+function opsInventoryPage() {
+    const session = getSession();
+    location.href = SERVER_URL + '/opsInventory?sk=' + session;
+}
+
 // Append a nav-bar based on which page is the currently viewed page
 const page = document.title;
 if(page != "assetTrack - Dashboard"){
