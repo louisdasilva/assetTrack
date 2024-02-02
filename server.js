@@ -68,6 +68,9 @@ app.get('/home', (req, res) => {
 app.get('/inventory', authenticate, (req, res) => {
     res.sendFile(`${DIR}/inventory.html`);
 });
+app.get('/opsInventory', authenticate, (req, res) => {
+    res.sendFile(`${DIR}/opsInventory.html`);
+});
 app.get('/template', authenticate, (req, res) => {
     res.sendFile(`${DIR}/template.html`);
 })
