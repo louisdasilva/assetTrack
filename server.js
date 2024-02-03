@@ -6,7 +6,6 @@ const DIR = __dirname;
 const express = require('express');
 const app = express(); //'app' refers to an instance of the Express application
 
-
 const bodyParser = require("body-parser");
 const path = require("path");
 
@@ -21,6 +20,7 @@ let io = require('socket.io')(http); // << LINK HTTP SERVER & SOCKET.IO LIBRARY 
 const loginRouter = require('./routers/loginRouter');
 const partRouter = require('./routers/partsRouter');
 const catalogueRoutes = require("./catalogue/Routes/routes");
+const opsRouter = require('./routers/opsRouter');
 
 // MIDDLEWARE
 app.use(express.static(__dirname + '/'));
@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, "catalogue/public")));
 app.use('/login', loginRouter);
 app.use('/authenticate', loginRouter);
 app.use('/api', partRouter);
+app.use('/ops', opsRouter);
 
 // MIDDLEWARE - AUTHENTICATION
 const axios = require('axios');

@@ -1,0 +1,39 @@
+/* Pop up Forms */
+.popUpForm {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 300px;
+    background-color: white;
+    border: 3px solid DarkBlue;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.button {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: white;
+    background: DarkBlue;
+    border: 1px solid DarkBlue;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    font-size: 14px;
+    max-width:400px;
+}
+
+.button:hover {
+    color: DarkBlue;
+    background: white;
+    border: 1px solid DarkBlue;
+    box-shadow: 2px 2px 0px 0px black;
+}
+
+footer {
+    position: fixed;
+    bottom: 10px;
+    text-align:center;
+    width: 100%;
+}
