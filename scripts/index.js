@@ -1,4 +1,3 @@
-
 const SERVER_URL = 'http://localhost:3000';
 
 function getSession() {
@@ -26,6 +25,24 @@ function inventoryPage() {
 function opsInventoryPage() {
     const session = getSession();
     location.href = SERVER_URL + '/opsInventory?sk=' + session;
+}
+
+function postThis(url,body,navigateTo){
+    $.ajax({
+        url: `${url}`,
+        type: 'POST',
+        data: JSON.stringify(body),
+        contentType: "application/json; charset=utf-8",
+        traditional: true,
+        success: function(response) {
+            localStorage.setItem('log', JSON.stringify(response));
+            location.href = `${navigateTo}`;
+        },
+        error: function(response) {
+            localStorage.setItem('log', JSON.stringify(response));
+            location.href = `${navigateTo}`;
+        }
+    });
 }
 
 // Append a nav-bar based on which page is the currently viewed page
