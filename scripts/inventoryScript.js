@@ -189,15 +189,33 @@ const getAllUserInput = () => {
 
     return formData;
 }
+function checkChangesMade(items, cardID) {
+    let changesMade = true;
+    const FORM_DATA = getAllUserInput();
+    const COLLECTION_DATA = items.find(item => item._id === cardID);
 
-function addOrUpdatePart(formData, cardID) {
+    if (COLLECTION_DATA) {
+        if(FORM_DATA.partName === COLLECTION_DATA.partName && 
+            FORM_DATA.partNumber === COLLECTION_DATA.partNumber && 
+            FORM_DATA.partFamily === COLLECTION_DATA.partFamily && 
+            FORM_DATA.description === COLLECTION_DATA.description) {
+                changesMade = false;
+        }
+    }
+    
+    return changesMade;
+}
+
+function addOrUpdatePart(cardID, collectionParts) {
+    let formData = getAllUserInput();
+    let changesMade = checkChangesMade(collectionParts, cardID)
     if (cardID == "Empty") {
         console.log("Error - Could not manage ID")
     }
     else if (cardID == "NEW_PART") {
         postPart(formData);
     }
-    else {
+    else if (changesMade) {
         updatePart(cardID, formData);
     }
 }
@@ -425,14 +443,12 @@ function checkNotifications() {
     }
     if (localStorage.getItem('deleteSuccess')) {
         showNotification("Part Removed Successfully", "red");
-        localStorage.removeItem('deleteSuccess');
+        localStorage.removeItem('deleteSuccess');  // CLEAR
     }
     if (localStorage.getItem('postUpdateSuccess')) {
         showNotification("Part Updated Successfully", "green");
         localStorage.removeItem('postUpdateSuccess'); // CLEAR
     }
-
-
 }
 
 function showNotification(message, colour) {
@@ -466,7 +482,7 @@ const initialiseDOM = async () => {
                 let formData = getAllUserInput(); 
                 let validUserInput = validateFormData(formData);
                 if (validUserInput) {
-                    addOrUpdatePart(formData, cardID)
+                    addOrUpdatePart(cardID, ALL_PARTS_ARRAY)
                 }
             });
             $('#clickMeButton').click(() => { 
