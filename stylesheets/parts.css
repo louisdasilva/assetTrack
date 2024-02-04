@@ -107,3 +107,11 @@ nav {
 #filterButtonsContainer {
   margin-bottom: 30px;
 }
+
+.centered-notification {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* Add any additional styling as needed */
+}

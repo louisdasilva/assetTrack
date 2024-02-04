@@ -348,8 +348,8 @@ function postPart(part){
             else { console.log('Error: ' + xhr.statusText); }
         },
         success: () => { 
-            alert('Part Post Successful');
             socket.emit('addPart', part.partFamily); // EMIT 'addPart' event to the server
+            localStorage.setItem('postSuccess', 'true'); // STORE IN MEMORY POST SUCCESS
             location.reload(true); // REFRESH PAGE
         }
     });
@@ -369,8 +369,8 @@ function updatePart(cardID, formData) {
             }
         },
         success: () => {
-            alert('Part Update Successful');
             socket.emit('updatePart', cardID); // Emit 'updatePart' event to the server
+            localStorage.setItem('postUpdateSuccess', 'true'); // STORE IN MEMORY POST SUCCESS
             location.reload(true); // Refresh page
         }
     });
@@ -388,6 +388,7 @@ function removeCard(cardId) {
             // REMOVE CARD FROM DOM 
             $(`.remove-card[data-card-id="${cardId}"]`).closest('.col').remove();
             socket.emit('removePart', ""); // EMIT 'removePart' event to the server
+            localStorage.setItem('deleteSuccess', 'true');
             location.reload(true); // REFRESH PAGE
         }
     });
@@ -417,6 +418,35 @@ socket.on('partRemoved', (part) => {
     alert("A Client Removed A Part. Refresh to see changes.");  //alert this client
 });
 
+function checkNotifications() {
+    if (localStorage.getItem('postSuccess')) {
+        showNotification("Part Added Successfully", "green");
+        localStorage.removeItem('postSuccess'); // CLEAR
+    }
+    if (localStorage.getItem('deleteSuccess')) {
+        showNotification("Part Removed Successfully", "red");
+        localStorage.removeItem('deleteSuccess');
+    }
+    if (localStorage.getItem('postUpdateSuccess')) {
+        showNotification("Part Updated Successfully", "green");
+        localStorage.removeItem('postUpdateSuccess'); // CLEAR
+    }
+
+
+}
+
+function showNotification(message, colour) {
+    const notificationStyle = {
+        html: message,
+        classes: `rounded ${colour} darken-2 centered-notification`,
+        displayLength: 5000, // Duration to display in milliseconds
+        inDuration: 300,
+        outDuration: 300, 
+        activationPercent: 0.8,
+    };
+    M.toast(notificationStyle);
+}
+
 // << MAIN METHIOD >>
 // ------------------
 const initialiseDOM = async () => {
@@ -430,6 +460,7 @@ const initialiseDOM = async () => {
         getPartID(); //SET ID's OF EVERY UPDATE BUTTON
 
         $(document).ready(function () {
+            checkNotifications();
             $('.materialboxed').materialbox();
             $('#formSubmit').click(() => { 
                 let formData = getAllUserInput(); 
