@@ -114,6 +114,11 @@ function resetFormInput() {
     partDescription.removeClass('invalid');
     // Reset Input Heading Placement
     M.updateTextFields();
+    // Reset Feedback Text
+    document.getElementById("PartNameFeedbackText").textContent = "";
+    document.getElementById("PartNumberFeedbackText").textContent = "";
+    document.getElementById("PartFamilyFeedbackText").textContent = "";
+    document.getElementById("DescriptionFeedbackFeedbackText").textContent = "";
 }
 
 function openForm(items) {
@@ -142,6 +147,12 @@ function openForm(items) {
 
             partName.focus(); partFamily.focus(); partNumber.focus(); partPath.focus(); partDescription.focus();
             partName.blur(); partFamily.blur(); partNumber.blur(); partPath.blur(); partDescription.blur();
+            
+            // Reset Feedback Text
+            document.getElementById("PartNameFeedbackText").textContent = "";
+            document.getElementById("PartNumberFeedbackText").textContent = "";
+            document.getElementById("PartFamilyFeedbackText").textContent = "";
+            document.getElementById("DescriptionFeedbackFeedbackText").textContent = "";
         });
     });
 }
@@ -172,9 +183,37 @@ const formSubmitted = () => {
     let formData = {};
     formData.partName = $('#partName').val();
     formData.partFamily = $('#partFamily').val();
-    // formData.partNumber = $('#partNumber').val(); //TODO
+    formData.partNumber = $('#partNumber').val();
     formData.path = $('#path').val();
     formData.description = $('#description').val();
+
+    let partNameFeedback = document.getElementById("PartNameFeedbackText");
+    let partNumberFeedback = document.getElementById("PartNumberFeedbackText");
+    let partFamilyFeedback = document.getElementById("PartFamilyFeedbackText");
+    let partDescriptionFeedback = document.getElementById("DescriptionFeedbackFeedbackText");
+
+    if (formData.partName == "") {
+        partNameFeedback.textContent = "Enter a Part Name.";
+    } else {
+        partNumberFeedback.textContent = "";
+    }
+    if (formData.partNumber == "") {
+        partNumberFeedback.textContent = "Enter a Part Number.";
+    } else {
+        partNumberFeedback.textContent = "";
+    }
+    if (formData.partFamily == null) {
+        partFamilyFeedback.textContent = "Select a Part Family.";
+    } else {
+        partFamilyFeedback.textContent = "";
+    }
+    if (formData.description == "") {
+        partDescriptionFeedback.textContent = "Enter a Description.";
+    } else {
+        partDescriptionFeedback.textContent = "";
+    }
+
+    validateFormInput(formData);
 
     if (cardID == "Empty") {
         console.log("Error - Could not manage ID")
@@ -187,6 +226,13 @@ const formSubmitted = () => {
     }
 
 }
+
+function validateFormInput(formData) {
+    console.log(formData);
+
+
+}
+
 
 
 // DYNAMICALLY CREATE FILTER BUTTONS BASED ON SEARCH INPUT

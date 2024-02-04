@@ -73,14 +73,25 @@
 							<div class="input-field col s4">
 								<input id="partName" type="text" class="validate">
 								<label for="partName">Part Name</label>
+								<span id="PartNameFeedbackText" class="col s12 red-text text-darken-2 center"></span> 
 							</div>
 							<div class="input-field col s4">
 								<input id="partNumber" type="text" class="validate">
 								<label for="partNumber">Part Number</label>
+								<span id="PartNumberFeedbackText" class="col s12 red-text text-darken-2 center"></span> 
 							</div>
 							<div class="input-field col s4">
-								<input id="partFamily" type="text" class="validate">
-								<label for="partFamily">Part Family</label>
+								<select id="partFamily" class="validate">
+									<option value="" disabled selected>Part Family</option>
+									<option value="wing">Wing</option>
+									<option value="fuselage">Fuselage</option>
+									<option value="tail">Tail</option>
+									<option value="engine">Engine</option>
+									<option value="landing gear">Landing gear</option>
+									<option value="cockpit">Cockpit</option>
+								</select>
+								<label for="partFamily"></label>
+								<span id="PartFamilyFeedbackText" class="col s12 red-text text-darken-2 center"></span> 
 							</div>
 						</div>
 						<div class="row">
@@ -94,12 +105,14 @@
 								<input id="description" type="text" class="validate">
 								<label for="description">Description</label>
 							</div>
+							<span id="DescriptionFeedbackFeedbackText" class="col s12 red-text text-darken-2 center"></span> 
 						</div>
 						<div class="row">
 							<div class="input-field col s12 center-align">
 								<a class="waves-effect waves-light btn" id="formSubmit">Submit</a>
 							</div>
 						</div>
+						<span id="ServerFeedbackText" class="col-md-4 form-text"></span> 
 					</form>
 				</div>
 			</div>
@@ -111,5 +124,12 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
 		<script src="./scripts/index.js"></script>
 		<script src="./scripts/inventoryScript.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				var elems = document.querySelectorAll('select');
+				var instances = M.FormSelect.init(elems);
+			});
+		</script>
+
 	</body>
 </html>
