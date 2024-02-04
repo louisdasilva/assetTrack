@@ -24,7 +24,7 @@
 						<h1 id="heading">Asset Track Parts Management System</h1>
 						<p class="flow-text">Click the Button below to Add Parts to the Tracking System.</p>				
 						<div class="col s6 right-align">
-							<a class="waves-effect waves-light btn modal-trigger common-button-style" href="#searchModal">
+							<a class="waves-effect waves-light btn modal-trigger common-button-style" onclick="resetSearchForm()" href="#searchModal">
 								<i class="material-icons left">search</i> Search
 							</a>
 						</div>
@@ -53,11 +53,12 @@
 					<div class="input-field">
 						<input type="text" id="searchInput" class="validate">
 						<label for="searchInput">Enter your search term - for example "wing", "engine" or "fuselage"</label>
+						<span id="SearchFeedbackText" class="col s12 red-text text-darken-2 center"></span> 
 					</div>
 				</div>
 				<div class="modal-footer">
 					<a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
-					<a href="#!" class="waves-effect waves-green btn-flat" id="searchSubmit">Search</a>
+					<a href="#!" class="waves-effect waves-green btn-flat filter-search-button" id="searchSubmit">Search</a>
 				</div>
 			</div>
 			<!-- END SEARCH PART MODAL -->

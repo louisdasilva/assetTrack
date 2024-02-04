@@ -273,7 +273,7 @@ function validateFormData(formData) {
 // -------------------------------------------------------
 const createFilterButtonsBasedOnSearchInput = (allParts) => {
     searchInput = $('#searchInput').val(); // GET USER SEARCH INPUT
-    
+
     if (!appliedFilters.includes(searchInput)) { // CHECK IF THE SEARCH INPUT IS ALREADY A FILTER
         appliedFilters.push(searchInput); // ADD NEW SEARCH INPUT TO LIST OF APPLIED FILTERS
         filterButtonsContainer.empty(); // REMOVE ALL FILTER BUTTONS
@@ -298,6 +298,7 @@ const createFilterButtonsBasedOnSearchInput = (allParts) => {
                 else { 
                     addCards(FILTERED_PARTS_ARRAY); // ADD CARDS MATCHING SEARCH INPUT FILTER FROM COLLECTION
                     populateTable(FILTERED_COMPONENTS_COUNT, ""); // CREATE TABLE WITH ALL COMPONENTS FROM COLLECTION
+                    openForm(allParts);
                 }
             });
             filterButtonsContainer.append(filterButton); // APPEND ALL REMOVE FILTER BUTTONS TO CONTAINER IN HTML
@@ -305,9 +306,29 @@ const createFilterButtonsBasedOnSearchInput = (allParts) => {
         $('#filterLabel').show(); // SHOW FILTERS HEADING
     }
     else { 
-        alert("Filter already applied");
+        showNotification("Filter Already Applied", "orange");
     }
     $('#searchModal').modal('close'); // CLOSE SEARCH MODAL
+
+}
+
+function validateSearchInput() {
+    searchInput = $('#searchInput').val(); // GET USER SEARCH INPUT
+    let searchFeedbackText = document.getElementById("SearchFeedbackText");
+    let validInput = true;
+    if(searchInput == "") {
+        searchFeedbackText.textContent = "Enter a Search Filter.";
+        validInput = false;
+    }
+    else {
+        searchFeedbackText.textContent = "";
+    }
+    return validInput;
+}
+
+function resetSearchForm() {
+    let searchFeedbackText = document.getElementById("SearchFeedbackText");
+    searchFeedbackText.textContent = "";
 }
 
 function updateDisplayBasedOnFilters(allParts) {
@@ -493,8 +514,11 @@ const initialiseDOM = async () => {
                 resetFormInput();
             });
             $('#searchSubmit').click(() => { 
-                createFilterButtonsBasedOnSearchInput(ALL_PARTS_ARRAY);
-                updateDisplayBasedOnFilters(ALL_PARTS_ARRAY);
+                let validSearchInput = validateSearchInput();
+                if(validSearchInput) {
+                    createFilterButtonsBasedOnSearchInput(ALL_PARTS_ARRAY);
+                    updateDisplayBasedOnFilters(ALL_PARTS_ARRAY);
+                }
             });
             $('#formSubmit').click(() => { 
                 let formData = getAllUserInput(); 

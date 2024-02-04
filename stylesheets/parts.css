@@ -108,6 +108,11 @@ nav {
   margin-bottom: 30px;
 }
 
+.filter-search-button {
+  background-color: #6268d9;
+  color: white;
+}
+
 .centered-notification {
   display: flex;
   align-items: center;
