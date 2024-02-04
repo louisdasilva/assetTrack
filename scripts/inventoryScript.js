@@ -179,7 +179,7 @@ function getPartID(callback) {
 }
 
 // EXTRACT CLIENT FORM INPUT INFORMATION
-const formSubmitted = () => {
+const getAllUserInput = () => {
     let formData = {};
     formData.partName = $('#partName').val();
     formData.partFamily = $('#partFamily').val();
@@ -187,34 +187,10 @@ const formSubmitted = () => {
     formData.path = $('#path').val();
     formData.description = $('#description').val();
 
-    let partNameFeedback = document.getElementById("PartNameFeedbackText");
-    let partNumberFeedback = document.getElementById("PartNumberFeedbackText");
-    let partFamilyFeedback = document.getElementById("PartFamilyFeedbackText");
-    let partDescriptionFeedback = document.getElementById("DescriptionFeedbackFeedbackText");
+    return formData;
+}
 
-    if (formData.partName == "") {
-        partNameFeedback.textContent = "Enter a Part Name.";
-    } else {
-        partNumberFeedback.textContent = "";
-    }
-    if (formData.partNumber == "") {
-        partNumberFeedback.textContent = "Enter a Part Number.";
-    } else {
-        partNumberFeedback.textContent = "";
-    }
-    if (formData.partFamily == null) {
-        partFamilyFeedback.textContent = "Select a Part Family.";
-    } else {
-        partFamilyFeedback.textContent = "";
-    }
-    if (formData.description == "") {
-        partDescriptionFeedback.textContent = "Enter a Description.";
-    } else {
-        partDescriptionFeedback.textContent = "";
-    }
-
-    validateFormInput(formData);
-
+function addOrUpdatePart(formData, cardID) {
     if (cardID == "Empty") {
         console.log("Error - Could not manage ID")
     }
@@ -224,13 +200,42 @@ const formSubmitted = () => {
     else {
         updatePart(cardID, formData);
     }
-
 }
 
-function validateFormInput(formData) {
-    console.log(formData);
+function validateFormData(formData) {
+    let partNameFeedback = document.getElementById("PartNameFeedbackText");
+    let partNumberFeedback = document.getElementById("PartNumberFeedbackText");
+    let partFamilyFeedback = document.getElementById("PartFamilyFeedbackText");
+    let partDescriptionFeedback = document.getElementById("DescriptionFeedbackFeedbackText");
+    
+    let validInput = true; 
 
+    if (formData.partName == "") {
+        partNameFeedback.textContent = "Enter a Part Name.";
+        validInput = false;
+    } else {
+        partNameFeedback.textContent = "";
+    }
+    if (formData.partNumber == "") {
+        partNumberFeedback.textContent = "Enter a Part Number.";
+        validInput = false;
+    } else {
+        partNumberFeedback.textContent = "";
+    }
+    if (formData.partFamily == null) {
+        partFamilyFeedback.textContent = "Select a Part Family.";
+        validInput = false;
+    } else {
+        partFamilyFeedback.textContent = "";
+    }
+    if (formData.description == "") {
+        partDescriptionFeedback.textContent = "Enter a Description.";
+        validInput = false;
+    } else {
+        partDescriptionFeedback.textContent = "";
+    }
 
+    return validInput;
 }
 
 
@@ -422,12 +427,16 @@ const initialiseDOM = async () => {
         populateTable(COMPONENT_COUNT, ""); // CREATE COMPONENT TABLE WITH COUNT OF DIFFERENT COMPONENTS
         addCards(ALL_PARTS_ARRAY); // CREATE A CARD FOR EACH PART IN COLLECTION
         openForm(ALL_PARTS_ARRAY);
-        getPartID();
+        getPartID(); //SET ID's OF EVERY UPDATE BUTTON
 
         $(document).ready(function () {
             $('.materialboxed').materialbox();
             $('#formSubmit').click(() => { 
-                formSubmitted(); 
+                let formData = getAllUserInput(); 
+                let validUserInput = validateFormData(formData);
+                if (validUserInput) {
+                    addOrUpdatePart(formData, cardID)
+                }
             });
             $('#clickMeButton').click(() => { 
                 resetFormInput();
