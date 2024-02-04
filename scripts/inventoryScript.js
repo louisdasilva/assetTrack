@@ -79,13 +79,20 @@ const addCards = (items) => {
             } 
         }
     });
-    // Listen for remove card click
-    document.querySelectorAll('.remove-card').forEach(button => {
-        button.addEventListener('click', function() {
-          const cardId = this.getAttribute('data-card-id');
-          removeCard(cardId);
-        });
+  // Listen for remove card click
+  document.querySelectorAll('.remove-card').forEach(button => {
+    button.addEventListener('click', function () {
+      const cardId = this.getAttribute('data-card-id');
+      const deleteModal = document.getElementById('deleteModal');
+      const modalInstance = M.Modal.init(deleteModal);
+      modalInstance.open();
+
+      document.getElementById('confirmDelete').addEventListener('click', function () {
+        removeCard(cardId);
+        modalInstance.close();
+      });
     });
+  });
 };
 
 function resetFormInput() {
@@ -114,6 +121,13 @@ function resetFormInput() {
     partDescription.removeClass('invalid');
     // Reset Input Heading Placement
     M.updateTextFields();
+    // Reset Feedback Text
+    document.getElementById("PartNameFeedbackText").textContent = "";
+    document.getElementById("PartNumberFeedbackText").textContent = "";
+    document.getElementById("PartFamilyFeedbackText").textContent = "";
+    document.getElementById("DescriptionFeedbackFeedbackText").textContent = "";
+    // Reset PartFamily Select
+    $(partFamily).formSelect(); // Trigger the Select Assignment
 }
 
 function openForm(items) {
@@ -132,6 +146,7 @@ function openForm(items) {
 
             partName.value = CARD_DETAILS.partName;
             partFamily.value = CARD_DETAILS.partFamily;
+            $(partFamily).formSelect(); // Trigger the Select Assignment
             partNumber.value = CARD_DETAILS.partNumber;
             partPath.value = CARD_DETAILS.path;
             partDescription.value = CARD_DETAILS.description;
@@ -142,6 +157,12 @@ function openForm(items) {
 
             partName.focus(); partFamily.focus(); partNumber.focus(); partPath.focus(); partDescription.focus();
             partName.blur(); partFamily.blur(); partNumber.blur(); partPath.blur(); partDescription.blur();
+            
+            // Reset Feedback Text
+            document.getElementById("PartNameFeedbackText").textContent = "";
+            document.getElementById("PartNumberFeedbackText").textContent = "";
+            document.getElementById("PartFamilyFeedbackText").textContent = "";
+            document.getElementById("DescriptionFeedbackFeedbackText").textContent = "";
         });
     });
 }
@@ -157,7 +178,7 @@ function getPartID(callback) {
         });
     });
 
-    const button = document.querySelector('#clickMeButton');
+    const button = document.querySelector('#addPartButton');
     button.addEventListener('click', function() {
         cardID = "NEW_PART";
         console.log(cardID);
@@ -168,32 +189,91 @@ function getPartID(callback) {
 }
 
 // EXTRACT CLIENT FORM INPUT INFORMATION
-const formSubmitted = () => {
+const getAllUserInput = () => {
     let formData = {};
     formData.partName = $('#partName').val();
     formData.partFamily = $('#partFamily').val();
-    // formData.partNumber = $('#partNumber').val(); //TODO
+    formData.partNumber = $('#partNumber').val();
     formData.path = $('#path').val();
     formData.description = $('#description').val();
 
+    return formData;
+}
+function checkChangesMade(items, cardID) {
+    let changesMade = true;
+    const FORM_DATA = getAllUserInput();
+    const COLLECTION_DATA = items.find(item => item._id === cardID);
+
+    if (COLLECTION_DATA) {
+        if(FORM_DATA.partName === COLLECTION_DATA.partName && 
+            FORM_DATA.partNumber === COLLECTION_DATA.partNumber && 
+            FORM_DATA.partFamily === COLLECTION_DATA.partFamily && 
+            FORM_DATA.description === COLLECTION_DATA.description) {
+                changesMade = false;
+                showNotification("Changes Required to Update", "orange");
+        }
+    }
+    
+    return changesMade;
+}
+
+function addOrUpdatePart(cardID, collectionParts) {
+    let formData = getAllUserInput();
+    let changesMade = checkChangesMade(collectionParts, cardID)
     if (cardID == "Empty") {
         console.log("Error - Could not manage ID")
     }
     else if (cardID == "NEW_PART") {
         postPart(formData);
     }
-    else {
+    else if (changesMade) {
         updatePart(cardID, formData);
     }
-
 }
+
+function validateFormData(formData) {
+    let partNameFeedback = document.getElementById("PartNameFeedbackText");
+    let partNumberFeedback = document.getElementById("PartNumberFeedbackText");
+    let partFamilyFeedback = document.getElementById("PartFamilyFeedbackText");
+    let partDescriptionFeedback = document.getElementById("DescriptionFeedbackFeedbackText");
+    
+    let validInput = true; 
+
+    if (formData.partName == "") {
+        partNameFeedback.textContent = "Enter a Part Name.";
+        validInput = false;
+    } else {
+        partNameFeedback.textContent = "";
+    }
+    if (formData.partNumber == "") {
+        partNumberFeedback.textContent = "Enter a Part Number.";
+        validInput = false;
+    } else {
+        partNumberFeedback.textContent = "";
+    }
+    if (formData.partFamily == null) {
+        partFamilyFeedback.textContent = "Select a Part Family.";
+        validInput = false;
+    } else {
+        partFamilyFeedback.textContent = "";
+    }
+    if (formData.description == "") {
+        partDescriptionFeedback.textContent = "Enter a Description.";
+        validInput = false;
+    } else {
+        partDescriptionFeedback.textContent = "";
+    }
+
+    return validInput;
+}
+
 
 
 // DYNAMICALLY CREATE FILTER BUTTONS BASED ON SEARCH INPUT
 // -------------------------------------------------------
 const createFilterButtonsBasedOnSearchInput = (allParts) => {
     searchInput = $('#searchInput').val(); // GET USER SEARCH INPUT
-    
+
     if (!appliedFilters.includes(searchInput)) { // CHECK IF THE SEARCH INPUT IS ALREADY A FILTER
         appliedFilters.push(searchInput); // ADD NEW SEARCH INPUT TO LIST OF APPLIED FILTERS
         filterButtonsContainer.empty(); // REMOVE ALL FILTER BUTTONS
@@ -218,6 +298,7 @@ const createFilterButtonsBasedOnSearchInput = (allParts) => {
                 else { 
                     addCards(FILTERED_PARTS_ARRAY); // ADD CARDS MATCHING SEARCH INPUT FILTER FROM COLLECTION
                     populateTable(FILTERED_COMPONENTS_COUNT, ""); // CREATE TABLE WITH ALL COMPONENTS FROM COLLECTION
+                    openForm(allParts);
                 }
             });
             filterButtonsContainer.append(filterButton); // APPEND ALL REMOVE FILTER BUTTONS TO CONTAINER IN HTML
@@ -225,9 +306,29 @@ const createFilterButtonsBasedOnSearchInput = (allParts) => {
         $('#filterLabel').show(); // SHOW FILTERS HEADING
     }
     else { 
-        alert("Filter already applied");
+        showNotification("Filter Already Applied", "orange");
     }
     $('#searchModal').modal('close'); // CLOSE SEARCH MODAL
+
+}
+
+function validateSearchInput() {
+    searchInput = $('#searchInput').val(); // GET USER SEARCH INPUT
+    let searchFeedbackText = document.getElementById("SearchFeedbackText");
+    let validInput = true;
+    if(searchInput == "") {
+        searchFeedbackText.textContent = "Enter a Search Filter.";
+        validInput = false;
+    }
+    else {
+        searchFeedbackText.textContent = "";
+    }
+    return validInput;
+}
+
+function resetSearchForm() {
+    let searchFeedbackText = document.getElementById("SearchFeedbackText");
+    searchFeedbackText.textContent = "";
 }
 
 function updateDisplayBasedOnFilters(allParts) {
@@ -297,8 +398,8 @@ function postPart(part){
             else { console.log('Error: ' + xhr.statusText); }
         },
         success: () => { 
-            alert('Part Post Successful');
             socket.emit('addPart', part.partFamily); // EMIT 'addPart' event to the server
+            localStorage.setItem('postSuccess', 'true'); // STORE IN MEMORY POST SUCCESS
             location.reload(true); // REFRESH PAGE
         }
     });
@@ -318,8 +419,8 @@ function updatePart(cardID, formData) {
             }
         },
         success: () => {
-            alert('Part Update Successful');
             socket.emit('updatePart', cardID); // Emit 'updatePart' event to the server
+            localStorage.setItem('postUpdateSuccess', 'true'); // STORE IN MEMORY POST SUCCESS
             location.reload(true); // Refresh page
         }
     });
@@ -337,6 +438,7 @@ function removeCard(cardId) {
             // REMOVE CARD FROM DOM 
             $(`.remove-card[data-card-id="${cardId}"]`).closest('.col').remove();
             socket.emit('removePart', ""); // EMIT 'removePart' event to the server
+            localStorage.setItem('deleteSuccess', 'true');
             location.reload(true); // REFRESH PAGE
         }
     });
@@ -366,6 +468,33 @@ socket.on('partRemoved', (part) => {
     alert("A Client Removed A Part. Refresh to see changes.");  //alert this client
 });
 
+function checkNotifications() {
+    if (localStorage.getItem('postSuccess')) {
+        showNotification("Part Added Successfully", "green");
+        localStorage.removeItem('postSuccess'); // CLEAR
+    }
+    if (localStorage.getItem('deleteSuccess')) {
+        showNotification("Part Removed Successfully", "red");
+        localStorage.removeItem('deleteSuccess');  // CLEAR
+    }
+    if (localStorage.getItem('postUpdateSuccess')) {
+        showNotification("Part Updated Successfully", "green");
+        localStorage.removeItem('postUpdateSuccess'); // CLEAR
+    }
+}
+
+function showNotification(message, colour) {
+    const notificationStyle = {
+        html: message,
+        classes: `rounded ${colour} darken-2 centered-notification`,
+        displayLength: 5000, // Duration to display in milliseconds
+        inDuration: 300,
+        outDuration: 300, 
+        activationPercent: 0.8,
+    };
+    M.toast(notificationStyle);
+}
+
 // << MAIN METHIOD >>
 // ------------------
 const initialiseDOM = async () => {
@@ -376,19 +505,27 @@ const initialiseDOM = async () => {
         populateTable(COMPONENT_COUNT, ""); // CREATE COMPONENT TABLE WITH COUNT OF DIFFERENT COMPONENTS
         addCards(ALL_PARTS_ARRAY); // CREATE A CARD FOR EACH PART IN COLLECTION
         openForm(ALL_PARTS_ARRAY);
-        getPartID();
+        getPartID(); //SET ID's OF EVERY UPDATE BUTTON
 
         $(document).ready(function () {
+            checkNotifications();
             $('.materialboxed').materialbox();
-            $('#formSubmit').click(() => { 
-                formSubmitted(); 
-            });
-            $('#clickMeButton').click(() => { 
+            $('#addPartButton').click(() => { 
                 resetFormInput();
             });
             $('#searchSubmit').click(() => { 
-                createFilterButtonsBasedOnSearchInput(ALL_PARTS_ARRAY);
-                updateDisplayBasedOnFilters(ALL_PARTS_ARRAY);
+                let validSearchInput = validateSearchInput();
+                if(validSearchInput) {
+                    createFilterButtonsBasedOnSearchInput(ALL_PARTS_ARRAY);
+                    updateDisplayBasedOnFilters(ALL_PARTS_ARRAY);
+                }
+            });
+            $('#formSubmit').click(() => { 
+                let formData = getAllUserInput(); 
+                let validUserInput = validateFormData(formData);
+                if (validUserInput) {
+                    addOrUpdatePart(cardID, ALL_PARTS_ARRAY)
+                }
             });
             $('.modal').modal();
         });

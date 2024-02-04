@@ -24,12 +24,12 @@
 						<h1 id="heading">Asset Track Parts Management System</h1>
 						<p class="flow-text">Click the Button below to Add Parts to the Tracking System.</p>				
 						<div class="col s6 right-align">
-							<a class="waves-effect waves-light btn modal-trigger common-button-style" href="#searchModal">
+							<a class="waves-effect waves-light btn modal-trigger common-button-style" onclick="resetSearchForm()" href="#searchModal">
 								<i class="material-icons left">search</i> Search
 							</a>
 						</div>
 						<div class="col s6 left-align">
-							<a class="waves-effect waves-light btn click-me-button modal-trigger common-button-style" id="clickMeButton" data-target="modal1">
+							<a class="waves-effect waves-light btn click-me-button modal-trigger common-button-style" id="addPartButton" data-target="modal1">
 								<i class="material-icons left">auto_fix_high</i>Add Part
 							</a>
 						</div>
@@ -53,11 +53,12 @@
 					<div class="input-field">
 						<input type="text" id="searchInput" class="validate">
 						<label for="searchInput">Enter your search term - for example "wing", "engine" or "fuselage"</label>
+						<span id="SearchFeedbackText" class="col s12 red-text text-darken-2 center"></span> 
 					</div>
 				</div>
 				<div class="modal-footer">
 					<a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
-					<a href="#!" class="waves-effect waves-green btn-flat" id="searchSubmit">Search</a>
+					<a href="#!" class="waves-effect waves-green btn-flat filter-search-button" id="searchSubmit">Search</a>
 				</div>
 			</div>
 			<!-- END SEARCH PART MODAL -->
@@ -73,14 +74,25 @@
 							<div class="input-field col s4">
 								<input id="partName" type="text" class="validate">
 								<label for="partName">Part Name</label>
+								<span id="PartNameFeedbackText" class="col s12 red-text text-darken-2 center"></span> 
 							</div>
 							<div class="input-field col s4">
 								<input id="partNumber" type="text" class="validate">
 								<label for="partNumber">Part Number</label>
+								<span id="PartNumberFeedbackText" class="col s12 red-text text-darken-2 center"></span> 
 							</div>
 							<div class="input-field col s4">
-								<input id="partFamily" type="text" class="validate">
-								<label for="partFamily">Part Family</label>
+								<select id="partFamily" class="validate">
+									<option value="" disabled selected>Part Family</option>
+									<option value="wing">Wing</option>
+									<option value="fuselage">Fuselage</option>
+									<option value="tail">Tail</option>
+									<option value="engine">Engine</option>
+									<option value="landing gear">Landing gear</option>
+									<option value="cockpit">Cockpit</option>
+								</select>
+								<label for="partFamily"></label>
+								<span id="PartFamilyFeedbackText" class="col s12 red-text text-darken-2 center"></span> 
 							</div>
 						</div>
 						<div class="row">
@@ -94,16 +106,30 @@
 								<input id="description" type="text" class="validate">
 								<label for="description">Description</label>
 							</div>
+							<span id="DescriptionFeedbackFeedbackText" class="col s12 red-text text-darken-2 center"></span> 
 						</div>
 						<div class="row">
 							<div class="input-field col s12 center-align">
 								<a class="waves-effect waves-light btn" id="formSubmit">Submit</a>
 							</div>
 						</div>
+						<span id="ServerFeedbackText" class="col-md-4 form-text"></span> 
 					</form>
 				</div>
 			</div>
 			<!-- END ADD PART MODAL -->
+			<!-- DELETE PART MODAL -->
+			<div id="deleteModal" class="modal">
+				<div class="modal-content">
+				  <h4>Are you sure you want to delete this part?</h4>
+				  <p>This action cannot be undone.</p>
+				</div>
+				<div class="modal-footer">
+				  <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+				  <a href="#!" class="waves-effect waves-light btn red darken-2" id="confirmDelete">Delete</a>
+				</div>
+			  </div>
+			  <!-- END DELETE PART MODAL -->
 		</main>
         <footer class="footer" style='text-align:center;position:fixed;bottom:0;width:100%'></footer><!-- footer inserted by index.js -->
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -111,5 +137,12 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
 		<script src="./scripts/index.js"></script>
 		<script src="./scripts/inventoryScript.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				var elems = document.querySelectorAll('select');
+				var instances = M.FormSelect.init(elems);
+			});
+		</script>
+
 	</body>
 </html>

@@ -107,3 +107,16 @@ nav {
 #filterButtonsContainer {
   margin-bottom: 30px;
 }
+
+.filter-search-button {
+  background-color: #6268d9;
+  color: white;
+}
+
+.centered-notification {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* Add any additional styling as needed */
+}
