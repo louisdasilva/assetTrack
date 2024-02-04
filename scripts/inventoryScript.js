@@ -79,13 +79,20 @@ const addCards = (items) => {
             } 
         }
     });
-    // Listen for remove card click
-    document.querySelectorAll('.remove-card').forEach(button => {
-        button.addEventListener('click', function() {
-          const cardId = this.getAttribute('data-card-id');
-          removeCard(cardId);
-        });
+  // Listen for remove card click
+  document.querySelectorAll('.remove-card').forEach(button => {
+    button.addEventListener('click', function () {
+      const cardId = this.getAttribute('data-card-id');
+      const deleteModal = document.getElementById('deleteModal');
+      const modalInstance = M.Modal.init(deleteModal);
+      modalInstance.open();
+
+      document.getElementById('confirmDelete').addEventListener('click', function () {
+        removeCard(cardId);
+        modalInstance.close();
+      });
     });
+  });
 };
 
 function resetFormInput() {
@@ -203,6 +210,7 @@ function checkChangesMade(items, cardID) {
             FORM_DATA.partFamily === COLLECTION_DATA.partFamily && 
             FORM_DATA.description === COLLECTION_DATA.description) {
                 changesMade = false;
+                showNotification("Changes Required to Update", "orange");
         }
     }
     
