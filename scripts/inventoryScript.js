@@ -119,6 +119,8 @@ function resetFormInput() {
     document.getElementById("PartNumberFeedbackText").textContent = "";
     document.getElementById("PartFamilyFeedbackText").textContent = "";
     document.getElementById("DescriptionFeedbackFeedbackText").textContent = "";
+    // Reset PartFamily Select
+    $(partFamily).formSelect(); // Trigger the Select Assignment
 }
 
 function openForm(items) {
@@ -137,6 +139,7 @@ function openForm(items) {
 
             partName.value = CARD_DETAILS.partName;
             partFamily.value = CARD_DETAILS.partFamily;
+            $(partFamily).formSelect(); // Trigger the Select Assignment
             partNumber.value = CARD_DETAILS.partNumber;
             partPath.value = CARD_DETAILS.path;
             partDescription.value = CARD_DETAILS.description;
@@ -168,7 +171,7 @@ function getPartID(callback) {
         });
     });
 
-    const button = document.querySelector('#clickMeButton');
+    const button = document.querySelector('#addPartButton');
     button.addEventListener('click', function() {
         cardID = "NEW_PART";
         console.log(cardID);
@@ -478,19 +481,19 @@ const initialiseDOM = async () => {
         $(document).ready(function () {
             checkNotifications();
             $('.materialboxed').materialbox();
+            $('#addPartButton').click(() => { 
+                resetFormInput();
+            });
+            $('#searchSubmit').click(() => { 
+                createFilterButtonsBasedOnSearchInput(ALL_PARTS_ARRAY);
+                updateDisplayBasedOnFilters(ALL_PARTS_ARRAY);
+            });
             $('#formSubmit').click(() => { 
                 let formData = getAllUserInput(); 
                 let validUserInput = validateFormData(formData);
                 if (validUserInput) {
                     addOrUpdatePart(cardID, ALL_PARTS_ARRAY)
                 }
-            });
-            $('#clickMeButton').click(() => { 
-                resetFormInput();
-            });
-            $('#searchSubmit').click(() => { 
-                createFilterButtonsBasedOnSearchInput(ALL_PARTS_ARRAY);
-                updateDisplayBasedOnFilters(ALL_PARTS_ARRAY);
             });
             $('.modal').modal();
         });
