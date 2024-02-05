@@ -59,5 +59,8 @@ async function installPart(){
                 location.reload();
             }
         });
+    } else {
+        alert("Part not available in Inventory - could not install.");
+        location.reload();
     }
 }
