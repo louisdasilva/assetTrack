@@ -1,11 +1,13 @@
+// << GLOBAL INITIALISATIONS >>
 const socket = io();
 let appliedFilters = [];
+let componentsFiltered = [];
 let searchInput = {};
+// << GLOBAL DECLARATIONS >>
 let filterButtonsContainer = $('#filterButtonsContainer');
 let cardsSection = $('#card-section'); // GET CARD SECTION
 let cardID = "Empty";
-
-// ARRAY OF ALL VALID PART FAMILIES -> GLOABL SCOPE AS USED BY MULTIPLE METHODS
+// ARRAY OF ALL VALID PART FAMILIES
 const VALID_PARTS = [ "wing" , "fuselage" , "tail" , "engine" , "landing gear" , "cockpit" ];
 
 // COUNT TOTAL NUMBER OF VALID PARTS PER PART FAMILY
@@ -30,7 +32,7 @@ function countValidParts(arr) {
     return partCount
 }
 
-// DYNAMICALLY CREATE & UPDATE PART FAMILY COUNT TABLE ON WEBPAGE
+// DYNAMICALLY CREATE & UPDATE TABLE ON WEBPAGE
 const populateTable = (partCount, tableSection) => {
     // Object.keys(partCount) returns an array of strings representing name-key pairs. Then I'm filtering out those equal to 0.
     const validParts = Object.keys(partCount).filter(part => partCount[part] > 0);
@@ -95,41 +97,10 @@ const addCards = (items) => {
   });
 };
 
-function resetFormInput() {
-    // Grab input elements
-    let partName = $('#partName');
-    let partFamily = $('#partFamily');
-    let partNumber = $('#partNumber');
-    let partPath = $('#path');
-    let partDescription = $('#description');
-    // Clear input values
-    partName.val('');
-    partFamily.val('');
-    partNumber.val('');
-    partPath.val('');
-    partDescription.val('');
-    // Remove highlighting and focus by updating CSS classes
-    partName.removeClass('valid');
-    partFamily.removeClass('valid');
-    partNumber.removeClass('valid');
-    partPath.removeClass('valid');
-    partDescription.removeClass('valid');
-    partName.removeClass('invalid');
-    partFamily.removeClass('invalid');
-    partNumber.removeClass('invalid');
-    partPath.removeClass('invalid');
-    partDescription.removeClass('invalid');
-    // Reset Input Heading Placement
-    M.updateTextFields();
-    // Reset Feedback Text
-    document.getElementById("PartNameFeedbackText").textContent = "";
-    document.getElementById("PartNumberFeedbackText").textContent = "";
-    document.getElementById("PartFamilyFeedbackText").textContent = "";
-    document.getElementById("DescriptionFeedbackFeedbackText").textContent = "";
-    // Reset PartFamily Select
-    $(partFamily).formSelect(); // Trigger the Select Assignment
-}
 
+
+// << FORM SUBMISSION MANAGMENT >>
+// -------------------------------
 function openForm(items) {
 
     let partName = document.getElementById('partName');
@@ -167,68 +138,6 @@ function openForm(items) {
     });
 }
 
-function getPartID(callback) {
-    document.querySelectorAll('.update-card').forEach(button => {
-        button.addEventListener('click', function() {
-            cardID = this.getAttribute('data-card-id');
-            console.log(cardID);
-            if (callback) {
-                callback(cardID);
-            }
-        });
-    });
-    const button = document.querySelector('#addPartButton');
-    button.addEventListener('click', function() {
-        cardID = "NEW_PART";
-        console.log(cardID);
-        if (callback) {
-            callback(cardID);
-        }
-    });
-}
-
-const getAllUserInput = () => {
-    let formData = {};
-    formData.partName = $('#partName').val();
-    formData.partFamily = $('#partFamily').val();
-    formData.partNumber = $('#partNumber').val();
-    formData.path = $('#path').val();
-    formData.description = $('#description').val();
-
-    return formData;
-}
-function checkInputChangesMade(items, cardID) {
-    let changesMade = true;
-    const FORM_DATA = getAllUserInput();
-    const COLLECTION_DATA = items.find(item => item._id === cardID);
-
-    if (COLLECTION_DATA) {
-        if(FORM_DATA.partName === COLLECTION_DATA.partName && 
-            FORM_DATA.partNumber === COLLECTION_DATA.partNumber && 
-            FORM_DATA.partFamily === COLLECTION_DATA.partFamily && 
-            FORM_DATA.description === COLLECTION_DATA.description) {
-                changesMade = false;
-                showNotification("Changes Required to Update", "orange");
-        }
-    }
-    
-    return changesMade;
-}
-
-function addOrUpdatePart(cardID, collectionParts) {
-    let formData = getAllUserInput();
-    let changesMade = checkInputChangesMade(collectionParts, cardID)
-    if (cardID == "Empty") {
-        console.log("Error - Could not manage ID")
-    }
-    else if (cardID == "NEW_PART") {
-        postPart(formData);
-    }
-    else if (changesMade) {
-        updatePart(cardID, formData);
-    }
-}
-
 function validateFormData(formData) {
     let partNameFeedback = document.getElementById("PartNameFeedbackText");
     let partNumberFeedback = document.getElementById("PartNumberFeedbackText");
@@ -264,6 +173,105 @@ function validateFormData(formData) {
 
     return validInput;
 }
+
+const getAllUserInput = () => {
+    let formData = {};
+    formData.partName = $('#partName').val();
+    formData.partFamily = $('#partFamily').val();
+    formData.partNumber = $('#partNumber').val();
+    formData.path = $('#path').val();
+    formData.description = $('#description').val();
+
+    return formData;
+}
+
+function getPartID(callback) {
+    document.querySelectorAll('.update-card').forEach(button => {
+        button.addEventListener('click', function() {
+            cardID = this.getAttribute('data-card-id');
+            console.log(cardID);
+            if (callback) {
+                callback(cardID);
+            }
+        });
+    });
+    const button = document.querySelector('#addPartButton');
+    button.addEventListener('click', function() {
+        cardID = "NEW_PART";
+        console.log(cardID);
+        if (callback) {
+            callback(cardID);
+        }
+    });
+}
+
+function checkInputChangesMade(items, cardID) {
+    let changesMade = true;
+    const FORM_DATA = getAllUserInput();
+    const COLLECTION_DATA = items.find(item => item._id === cardID);
+
+    if (COLLECTION_DATA) {
+        if(FORM_DATA.partName === COLLECTION_DATA.partName && 
+            FORM_DATA.partNumber === COLLECTION_DATA.partNumber && 
+            FORM_DATA.partFamily === COLLECTION_DATA.partFamily && 
+            FORM_DATA.description === COLLECTION_DATA.description) {
+                changesMade = false;
+                showNotification("Changes Required to Update", "orange");
+        }
+    }
+    
+    return changesMade;
+}
+
+function addOrUpdatePart(cardID, collectionParts) {
+    let formData = getAllUserInput();
+    let changesMade = checkInputChangesMade(collectionParts, cardID)
+    if (cardID == "Empty") {
+        console.log("Error - Could not manage ID")
+    }
+    else if (cardID == "NEW_PART") {
+        postPart(formData);
+    }
+    else if (changesMade) {
+        updatePart(cardID, formData);
+    }
+}
+
+function resetFormInput() {
+    // Grab input elements
+    let partName = $('#partName');
+    let partFamily = $('#partFamily');
+    let partNumber = $('#partNumber');
+    let partPath = $('#path');
+    let partDescription = $('#description');
+    // Clear input values
+    partName.val('');
+    partFamily.val('');
+    partNumber.val('');
+    partPath.val('');
+    partDescription.val('');
+    // Remove highlighting and focus by updating CSS classes
+    partName.removeClass('valid');
+    partFamily.removeClass('valid');
+    partNumber.removeClass('valid');
+    partPath.removeClass('valid');
+    partDescription.removeClass('valid');
+    partName.removeClass('invalid');
+    partFamily.removeClass('invalid');
+    partNumber.removeClass('invalid');
+    partPath.removeClass('invalid');
+    partDescription.removeClass('invalid');
+    // Reset Input Heading Placement
+    M.updateTextFields();
+    // Reset Feedback Text
+    document.getElementById("PartNameFeedbackText").textContent = "";
+    document.getElementById("PartNumberFeedbackText").textContent = "";
+    document.getElementById("PartFamilyFeedbackText").textContent = "";
+    document.getElementById("DescriptionFeedbackFeedbackText").textContent = "";
+    // Reset PartFamily Select
+    $(partFamily).formSelect(); // Trigger the Select Assignment
+}
+// << END FORM SUBMISSION MANAGMENT >>
 
 
 
@@ -345,6 +353,7 @@ function updateDisplayWithFilters(allParts) {
 
 function filteredPartsArray(allParts) {
     let filteredPartArray = [];
+    componentsFiltered = [];
     let filteredIDSet = new Set();
     // Iterate through each filter
     appliedFilters.forEach(appliedFilter => {
@@ -354,8 +363,13 @@ function filteredPartsArray(allParts) {
             part.partNumber.toLowerCase().includes(appliedFilter.toLowerCase())) &&
             !filteredIDSet.has(part._id)
         );
-        // Here I Add unique IDs to the Set
+        // Add unique IDs to the Set
         filteredParts.forEach(part => filteredIDSet.add(part._id));
+        // Caputure each partFamily to populate table 
+        filteredParts.forEach(part => {
+            componentsFiltered.push(part.partFamily);
+        });
+
         // Push filtered parts to array
         filteredPartArray.push(filteredParts);
     });
@@ -364,20 +378,23 @@ function filteredPartsArray(allParts) {
     return FILTERED_PARTS_ARRAY;
 }
 
-function filteredComponentsCountAsObject(allParts) {
+function filteredComponentsCountAsObject() {
     let filteredComponentsCount = {};
 
-    appliedFilters.forEach(appliedFilter => {
-        // COUNT PARTS FOR EACH APPLIED FILTER
-        filteredComponentsCount[appliedFilter] = allParts.filter(part => part.partFamily === appliedFilter).length;
+    componentsFiltered.forEach(partFamily => {
+        // COUNT PARTS FOR EACH PART FAMILY in filtersComponentArray
+        filteredComponentsCount[partFamily] = (filteredComponentsCount[partFamily] || 0) + 1;
     });
+
     return filteredComponentsCount;
 }
 
 function removeFilterFromArray(filterToRemove) {
     const indexToRemove = appliedFilters.indexOf(filterToRemove); // GET INDEX OF FILTER TO REMOVE
+
     if (indexToRemove !== -1) { // IF INDEX OF FILTER FOUND
         appliedFilters.splice(indexToRemove, 1); // REMOVE THAT INDEX
+        componentsFiltered.splice(indexToRemove, 1);
     }
     return appliedFilters;
 }
@@ -394,6 +411,8 @@ function resetSearchForm() {
     searchFeedbackText.textContent = "";
 }
 // << END SEARCH & FILTER >>
+
+
 
 // << CRUD OPERATIONS >>
 // ---------------------
@@ -470,6 +489,8 @@ function getAllParts() {
 }
 // << END CRUD OPERATIONS >>
 
+
+
 // << WEBSOCKETS >>
 // Listen for 'partAdded' event from client.
 socket.on('partAdded', (part) => {
@@ -481,6 +502,10 @@ socket.on('partRemoved', (part) => {
 });
 // << END WEBSOCKETS >>
 
+
+
+// << NOTIFICATIONS >>
+// ---------------------
 function checkNotifications() {
     if (localStorage.getItem('postSuccess')) {
         showNotification("Part Added Successfully", "green");
@@ -507,18 +532,23 @@ function showNotification(message, colour) {
     };
     M.toast(notificationStyle);
 }
+// << END NOTIFICATIONS >>
+
+
 
 // << MAIN METHIOD >>
 // ------------------
 const initialiseDOM = async () => {
     try {
+        // << PARTS DATABASE MANAGEMENT >>
         const ALL_PARTS_ARRAY = await getAllParts(); // CREATE ARRAY OF ALL OBJECTS IN THE PARTS COLLECTION
         const ALL_COMPONENTS_ARRAY = ALL_PARTS_ARRAY.map(part => part.partFamily); // CREATE ARRAY OF ALL COMPONENTS IN THE PARTS COLLECTION E.G. { wing, fuselage, wing }
         const COMPONENT_COUNT = countValidParts(ALL_COMPONENTS_ARRAY); // CREATE OBJECT OF ALL COMPONENTS AND THEIR COUNT IN PARTS COLLECTION E.G. { wing: 2, fuselage: 3 }
         populateTable(COMPONENT_COUNT, ""); // CREATE COMPONENT TABLE WITH COUNT OF DIFFERENT COMPONENTS
         addCards(ALL_PARTS_ARRAY); // CREATE A CARD FOR EACH PART IN COLLECTION
         openForm(ALL_PARTS_ARRAY);
-        getPartID(); //UNIQUE ID OF UPDATE BUTTON ON EACH CARD
+        getPartID(); // UNIQUE ID ATTACHED TO EVERY UPDATE BUTTON
+        // << END PARTS DATABASE MANAGMENT >>
 
         $(document).ready(function () {
             checkNotifications();
@@ -551,14 +581,12 @@ const initialiseDOM = async () => {
         console.error(error);
     }
 };
+// << END MAIN METHOD >>
 
 // CHECK WHETHER MODULE OBJECT IS DEFINED
 // << (Node.js environment) >>
-// ---------------------------
 if (typeof module !== 'undefined') { module.exports = { countValidParts, countValidParts, addCards }; } // EXPORTS
 // << (browser environment) >>
-// ---------------------------
 else { 
     initialiseDOM(); 
-} // INITIALISE DOM
-//The above conditional allows the same code to be used in both environments.
+}
