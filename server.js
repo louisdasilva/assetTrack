@@ -23,12 +23,13 @@ const catalogueRoutes = require("./catalogue/Routes/routes");
 const opsRouter = require('./routers/opsRouter');
 
 // MIDDLEWARE
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname + '/',{extensions:['html','css','js']}));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "catalogue/views"));
 app.use(express.static(path.join(__dirname, "catalogue/public")));
+
 
 // MIDDLEWARE - ROUTERS
 app.use('/login', loginRouter);
@@ -60,6 +61,9 @@ async function authenticate(req, res, next) {
 // })
 app.use("/catalogue", catalogueRoutes);
 
+app.get('/aircraft', authenticate, (req, res) => {
+    res.sendFile(`${DIR}/aircraft.html`);
+});
 app.get('/dash', authenticate, (req, res) => {
     res.sendFile(`${DIR}/dashboard.html`);
 });

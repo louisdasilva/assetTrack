@@ -17,9 +17,15 @@ $.get(`${SERVER_URL}/ops/fleet`)
             <tr>
                 <td>
                 <br>
-                    <button onclick=goToAircraft()>${aircraft.registration}</button>
+                    <button onclick=goToAircraft('${aircraft.registration}')>${aircraft.registration}</button>
                 </td>
             </tr>`
         );
     });
 });
+
+function goToAircraft(rego){
+    const session = getSession(); // from index.js
+    localStorage.setItem("reg",rego); // store the aircraft registration in browser local storage
+    location.href = SERVER_URL + '/aircraft?sk=' + session;
+}

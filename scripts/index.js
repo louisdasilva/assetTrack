@@ -45,6 +45,20 @@ function postThis(url,body,navigateTo){
     });
 }
 
+function deleteThis(url){
+    $.ajax({
+        url: `${url}`,
+        type: 'DELETE',
+        traditional: true,
+        success: function(response) {
+            localStorage.setItem('last delete log', JSON.stringify(response));
+        },
+        error: function(response) {
+            localStorage.setItem('last delete log', JSON.stringify(response));
+        }
+    });
+}
+
 // Append a nav-bar based on which page is the currently viewed page
 const page = document.title;
 if(page != "assetTrack - Dashboard"){
