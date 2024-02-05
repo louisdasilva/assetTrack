@@ -177,7 +177,6 @@ function getPartID(callback) {
             }
         });
     });
-
     const button = document.querySelector('#addPartButton');
     button.addEventListener('click', function() {
         cardID = "NEW_PART";
@@ -188,7 +187,6 @@ function getPartID(callback) {
     });
 }
 
-// EXTRACT CLIENT FORM INPUT INFORMATION
 const getAllUserInput = () => {
     let formData = {};
     formData.partName = $('#partName').val();
@@ -199,7 +197,7 @@ const getAllUserInput = () => {
 
     return formData;
 }
-function checkChangesMade(items, cardID) {
+function checkInputChangesMade(items, cardID) {
     let changesMade = true;
     const FORM_DATA = getAllUserInput();
     const COLLECTION_DATA = items.find(item => item._id === cardID);
@@ -219,7 +217,7 @@ function checkChangesMade(items, cardID) {
 
 function addOrUpdatePart(cardID, collectionParts) {
     let formData = getAllUserInput();
-    let changesMade = checkChangesMade(collectionParts, cardID)
+    let changesMade = checkInputChangesMade(collectionParts, cardID)
     if (cardID == "Empty") {
         console.log("Error - Could not manage ID")
     }
@@ -269,51 +267,9 @@ function validateFormData(formData) {
 
 
 
-// DYNAMICALLY CREATE FILTER BUTTONS BASED ON SEARCH INPUT
-// -------------------------------------------------------
-const createFilterButtonsBasedOnSearchInput = (allParts) => {
-    searchInput = $('#searchInput').val(); // GET USER SEARCH INPUT
-
-    if (!appliedFilters.includes(searchInput)) { // CHECK IF THE SEARCH INPUT IS ALREADY A FILTER
-        appliedFilters.push(searchInput); // ADD NEW SEARCH INPUT TO LIST OF APPLIED FILTERS
-        filterButtonsContainer.empty(); // REMOVE ALL FILTER BUTTONS
-        // ADD ALL FILTER BUTTONS INCLUDING NEW INPUT
-        appliedFilters.forEach(filter => {
-            // ATTACH HTML & FILTER NAME
-            let filterButton = $('<button>', {
-                class: 'waves-effect waves-light btn-small remove-filter-btn filter-button',
-                html: `<i class="material-icons left">close</i>${filter}`
-            });
-            filterButton.attr('data-filter', filter); // ADD DATA ATTRIBUTE TO REFER TO FOR DELETION
-            // ATTACH REMOVE FILTER FUNCTION ONCLICK
-            filterButton.click(() => {
-                removeFilterFromArray(filter);
-                hideFilterButton(filter);
-                cardsSection.empty(); // CHANGE CARD SECTION TO EMPTY
-                const FILTERED_PARTS_ARRAY = returnUserFilteredPartsInArray(allParts); // AN ARRAY OF PART OBJECTS
-                const FILTERED_COMPONENTS_COUNT = returnUserFilteredComponentsAndCountsAsObject(allParts); // E.G. {wing: 2, fuselage: 1}
-                if (appliedFilters.length == 0) { // CHECK NO FILTERS ARE APPLIED
-                    location.reload(true); // REFRESH PAGE
-                }
-                else { 
-                    addCards(FILTERED_PARTS_ARRAY); // ADD CARDS MATCHING SEARCH INPUT FILTER FROM COLLECTION
-                    populateTable(FILTERED_COMPONENTS_COUNT, ""); // CREATE TABLE WITH ALL COMPONENTS FROM COLLECTION
-                    openForm(allParts);
-                }
-            });
-            filterButtonsContainer.append(filterButton); // APPEND ALL REMOVE FILTER BUTTONS TO CONTAINER IN HTML
-        });
-        $('#filterLabel').show(); // SHOW FILTERS HEADING
-    }
-    else { 
-        showNotification("Filter Already Applied", "orange");
-    }
-    $('#searchModal').modal('close'); // CLOSE SEARCH MODAL
-
-}
-
-function validateSearchInput() {
-    searchInput = $('#searchInput').val(); // GET USER SEARCH INPUT
+// SEARCH & FILTER
+// ---------------
+function validSearchInput(searchInput) {
     let searchFeedbackText = document.getElementById("SearchFeedbackText");
     let validInput = true;
     if(searchInput == "") {
@@ -326,36 +282,89 @@ function validateSearchInput() {
     return validInput;
 }
 
-function resetSearchForm() {
-    let searchFeedbackText = document.getElementById("SearchFeedbackText");
-    searchFeedbackText.textContent = "";
+function searchTermFound(searchInput, allParts) {
+    let match = allParts.some(part => 
+        part.partName.includes(searchInput) ||
+        part.partFamily.includes(searchInput) ||
+        part.partNumber.includes(searchInput)
+    );
+    if(!match) {showNotification("Search Item Not Found", "orange")}
+
+    return match;
 }
 
-function updateDisplayBasedOnFilters(allParts) {
-    const FILTERED_PARTS_ARRAY = returnUserFilteredPartsInArray(allParts);
-    const FILTERED_COMPONENTS_COUNT = returnUserFilteredComponentsAndCountsAsObject(allParts);
-    cardsSection.empty(); // REMOVE ALL CARDS FROM CARD SECTION
-    populateTable(FILTERED_COMPONENTS_COUNT, ""); // CREATE TABLE WITH FILTERED COMPONENTS AND COUNTS
-    addCards(FILTERED_PARTS_ARRAY); // ADD FILTERED CARDS
-    openForm(allParts);
-    getPartID();
+const filterAlreadyApplied = (searchInput) => {
+    let filterAlreadyApplied = true;
+
+    if (!appliedFilters.includes(searchInput)) { // CHECK IF THE SEARCH INPUT IS ALREADY A FILTER
+        filterAlreadyApplied = false;
+    }
+    else { 
+        showNotification("Filter Already Applied", "orange");
+    }
+    return filterAlreadyApplied;
 }
 
-function returnUserFilteredPartsInArray(allParts) {
-        let filteredArrays = [];
-        // Iterate over each applied filter
-        appliedFilters.forEach(appliedFilter => {
-            // Filter the parts based on the current applied filter
-            let filteredParts = allParts.filter(part => part.partFamily === appliedFilter);
-            // Push the filtered parts to the array
-            filteredArrays.push(filteredParts);
+function createFilterButton(searchInput, allParts) {
+    appliedFilters.push(searchInput); // ADD NEW SEARCH INPUT TO LIST OF APPLIED FILTERS
+    filterButtonsContainer.empty(); // REMOVE ALL FILTER BUTTONS
+    // ADD ALL FILTER BUTTONS INCLUDING NEW INPUT
+    appliedFilters.forEach(filter => {
+        // ATTACH HTML & FILTER NAME
+        let filterButton = $('<button>', {
+            class: 'waves-effect waves-light btn-small remove-filter-btn filter-button',
+            html: `<i class="material-icons left">close</i>${filter}`
         });
-        // Combine all filtered arrays into a single array (using flatMap for this purpose)
-        const FILTERED_PARTS_ARRAY = filteredArrays.flatMap(filteredParts => filteredParts);
-        return FILTERED_PARTS_ARRAY
+        filterButton.attr('data-filter', filter); // ADD DATA ATTRIBUTE TO REFER TO FOR DELETION
+        // ATTACH REMOVE FILTER FUNCTION ONCLICK
+        filterButton.click(() => {
+            removeFilterFromArray(filter);
+            hideFilterButton(filter);
+            cardsSection.empty(); // CHANGE CARD SECTION TO EMPTY
+            updateDisplayWithFilters(allParts);
+        });
+        filterButtonsContainer.append(filterButton); // APPEND ALL REMOVE FILTER BUTTONS TO CONTAINER IN HTML
+    });
+    $('#filterLabel').show(); // SHOW FILTERS HEADING
 }
 
-function returnUserFilteredComponentsAndCountsAsObject(allParts) {
+function updateDisplayWithFilters(allParts) {
+    const FILTERED_PARTS_ARRAY = filteredPartsArray(allParts); // AN ARRAY OF PART OBJECTS
+    const FILTERED_COMPONENTS_COUNT = filteredComponentsCountAsObject(allParts); // E.G. {wing: 2, fuselage: 1}
+    if (appliedFilters.length == 0) { // CHECK NO FILTERS ARE APPLIED
+        location.reload(true); // REFRESH PAGE
+    }
+    else { 
+        cardsSection.empty(); // REMOVE ALL CARDS FROM CARD SECTION
+        addCards(FILTERED_PARTS_ARRAY); // ADD CARDS MATCHING SEARCH INPUT FILTER FROM COLLECTION
+        populateTable(FILTERED_COMPONENTS_COUNT, ""); // CREATE TABLE WITH ALL COMPONENTS FROM COLLECTION
+        openForm(allParts);
+        getPartID();
+    }
+}
+
+function filteredPartsArray(allParts) {
+    let filteredPartArray = [];
+    let filteredIDSet = new Set();
+    // Iterate through each filter
+    appliedFilters.forEach(appliedFilter => {
+        let filteredParts = allParts.filter(part =>
+            (part.partFamily.toLowerCase() === appliedFilter.toLowerCase() ||
+            part.partName.toLowerCase().includes(appliedFilter.toLowerCase()) ||
+            part.partNumber.toLowerCase().includes(appliedFilter.toLowerCase())) &&
+            !filteredIDSet.has(part._id)
+        );
+        // Here I Add unique IDs to the Set
+        filteredParts.forEach(part => filteredIDSet.add(part._id));
+        // Push filtered parts to array
+        filteredPartArray.push(filteredParts);
+    });
+    // Combine all filtered arrays into a single array (I'm using flatMap for this purpose)
+    const FILTERED_PARTS_ARRAY = filteredPartArray.flatMap(filteredParts => filteredParts);
+    return FILTERED_PARTS_ARRAY;
+}
+
+function filteredComponentsCountAsObject(allParts) {
     let filteredComponentsCount = {};
 
     appliedFilters.forEach(appliedFilter => {
@@ -380,8 +389,14 @@ function hideFilterButton(filterToRemove) {
     $(`.remove-filter-btn[data-filter="${filterToRemove}"]`).hide(); // HIDE FILTER BUTTON
 }
 
-// << SEND POST REQUEST TO SERVER >>
-// ---------------------------------
+function resetSearchForm() {
+    let searchFeedbackText = document.getElementById("SearchFeedbackText");
+    searchFeedbackText.textContent = "";
+}
+// << END SEARCH & FILTER >>
+
+// << CRUD OPERATIONS >>
+// ---------------------
 function postPart(part){
     console.log('Sending POST request with data:', part);
     // SEND PART OBJECT TO /api/part ENDPOINT USING AJAX
@@ -426,8 +441,6 @@ function updatePart(cardID, formData) {
     });
 }
 
-// << SEND DELETE REQUEST TO SERVER >>
-// -----------------------------------
 function removeCard(cardId) {
     // SEND REQUEST TO DELETE THE OBJECT WITH MATCHING CARDID
     $.ajax({
@@ -444,8 +457,6 @@ function removeCard(cardId) {
     });
 }
 
-// << SEND REQUEST TO RETRIEVE ALL PARTS FROM SERVER >>
-// ----------------------------------------------------
 function getAllParts() {
     return new Promise((resolve, reject) => {
         $.get('/api/parts', (response) => {
@@ -457,6 +468,7 @@ function getAllParts() {
         });
     });
 }
+// << END CRUD OPERATIONS >>
 
 // << WEBSOCKETS >>
 // Listen for 'partAdded' event from client.
@@ -467,6 +479,7 @@ socket.on('partAdded', (part) => {
 socket.on('partRemoved', (part) => {
     alert("A Client Removed A Part. Refresh to see changes.");  //alert this client
 });
+// << END WEBSOCKETS >>
 
 function checkNotifications() {
     if (localStorage.getItem('postSuccess')) {
@@ -505,7 +518,7 @@ const initialiseDOM = async () => {
         populateTable(COMPONENT_COUNT, ""); // CREATE COMPONENT TABLE WITH COUNT OF DIFFERENT COMPONENTS
         addCards(ALL_PARTS_ARRAY); // CREATE A CARD FOR EACH PART IN COLLECTION
         openForm(ALL_PARTS_ARRAY);
-        getPartID(); //SET ID's OF EVERY UPDATE BUTTON
+        getPartID(); //UNIQUE ID OF UPDATE BUTTON ON EACH CARD
 
         $(document).ready(function () {
             checkNotifications();
@@ -514,10 +527,14 @@ const initialiseDOM = async () => {
                 resetFormInput();
             });
             $('#searchSubmit').click(() => { 
-                let validSearchInput = validateSearchInput();
-                if(validSearchInput) {
-                    createFilterButtonsBasedOnSearchInput(ALL_PARTS_ARRAY);
-                    updateDisplayBasedOnFilters(ALL_PARTS_ARRAY);
+                searchInput = $('#searchInput').val().toLowerCase();
+                if(validSearchInput(searchInput) && 
+                    !filterAlreadyApplied(searchInput) && 
+                    searchTermFound(searchInput, ALL_PARTS_ARRAY)
+                ) {
+                    $('#searchModal').modal('close'); // CLOSE SEARCH INPUT WINDOW
+                    createFilterButton(searchInput, ALL_PARTS_ARRAY);
+                    updateDisplayWithFilters(ALL_PARTS_ARRAY);
                 }
             });
             $('#formSubmit').click(() => { 
