@@ -37,3 +37,45 @@ footer {
     text-align:center;
     width: 100%;
 }
+
+nav {
+    color: #fff;
+    background-color: #272b66;
+    width: 100%;
+    height: 90px;
+    line-height: 30px;
+}
+
+.navbar-size {
+    width: 95%;
+    margin: 0 auto;
+}
+
+#nav-mobile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+}
+
+.navBar {
+    font-size: 30px;
+    padding: 30px;
+    padding-left: 60px;
+    padding-right: 60px;
+    text-decoration: none; /* Remove underline */
+    color: #fff; /* Set default text color */
+    transition: color 0.3s; /* Add transition for color change */
+}
+
+.navBar:hover {
+    color: white; /* Change text color on hover */
+}
+
+.main-body {
+    background-color: #ffffff;
+    color: #5e5657;
+    height: calc(100vh - 64px);
+}
+
