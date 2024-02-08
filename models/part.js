@@ -19,11 +19,11 @@ async function postPart(part, callback) {
             console.log("ERROR: Add Part Failed - No ID Assigned");
             callback({ statusCode: 500, message: 'Add Part Failed' }, null);
         }
-    // CATCH ERROR WHILE ADDING PART TO DB
-    }   catch (error) {
-            console.log('ERROR: Add Part Failed -  MongoDB Error');
-            callback({ statusCode: 500, message: 'MongoDB Error', error: error.message }, null);
-        }
+        // CATCH ERROR WHILE ADDING PART TO DB
+    } catch (error) {
+        console.log('ERROR: Add Part Failed -  MongoDB Error');
+        callback({ statusCode: 500, message: 'MongoDB Error', error: error.message }, null);
+    }
 }
 
 // << METHOD: UPDATE PART IN DATABASE >>
@@ -40,7 +40,7 @@ async function updatePart(partID, updatedPart, callback) {
         if (result.matchedCount > 0) {
             console.log('Part Updated Successfully');
             callback(null, { statusCode: 200, message: 'Part updated successfully' });
-        } 
+        }
         // CALLBACK: ID NOT FOUND IN DB
         else {
             console.log('Part not found');
@@ -62,14 +62,14 @@ async function deletePart(partID, callback) {
         if (result.deletedCount > 0) {
             console.log('Card Deleted Successfully');
             callback(null, { statusCode: 204, message: 'Card deleted successfully' });
-        } 
+        }
         // CALLBACK: ID NOT FOUND IN DB
         else {
             console.log('Card not found');
             console.log(cardId);
             callback({ statusCode: 404, message: 'Card not found' }, null);
         }
-    // CATCH ERROR WHILE DELETING PART FROM DB
+        // CATCH ERROR WHILE DELETING PART FROM DB
     } catch (error) {
         console.error('Error deleting card:', error);
         callback({ statusCode: 500, message: 'Internal Server Error' }, null);
@@ -81,9 +81,19 @@ async function deletePart(partID, callback) {
 function getAllParts(callback) {
     //query empty objects {} (all objects), convert to array and execute callback of potential errors and results.
     collection.find({}).toArray() // Use the toArray method with a promise.
-    .then(result => callback(null, result))
-    .catch(error => callback(error, null));
+        .then(result => callback(null, result))
+        .catch(error => callback(error, null));
+}
+
+async function getPartById(partID, callback) {
+    try {
+        await collection.findOne({ _id: new ObjectId(partID) })
+            .then(result => callback(null, result))
+            .catch(error => callback(error, null))
+    } catch (error) {
+        callback({ statusCode: 500, message: 'Internal Server Error' }, null);
+    }
 }
 
 //EXPORTS
-module.exports = {postPart, getAllParts, deletePart, updatePart}
+module.exports = { postPart, getAllParts, deletePart, updatePart, getPartById }

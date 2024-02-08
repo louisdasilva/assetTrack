@@ -99,11 +99,12 @@
     border: 0;
 }
 
-.formscontainer input[type="submit"] {
+.formscontainer .submit-btn {
     border: 0;
     background: #2196F3;
     color: #fff;
     text-transform: uppercase;
+    text-decoration: none;
     padding: .5rem;
     margin-top: 1rem;
     cursor: pointer;

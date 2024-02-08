@@ -20,20 +20,21 @@ let io = require('socket.io')(http); // << LINK HTTP SERVER & SOCKET.IO LIBRARY 
 // ROUTERS
 const loginRouter = require('./routers/loginRouter');
 const partRouter = require('./routers/partsRouter');
-const catalogueRoutes = require("./catalogue/Routes/routes");
+const catalogueRoutes = require("./routers/cataloguePart");
 
 // MIDDLEWARE
 app.use(express.static(__dirname + '/'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "catalogue/views"));
-app.use(express.static(path.join(__dirname, "catalogue/public")));
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
 
 // MIDDLEWARE - ROUTERS
 app.use('/login', loginRouter);
 app.use('/authenticate', loginRouter);
 app.use('/api', partRouter);
+app.use("/catalogue", catalogueRoutes);
 
 // MIDDLEWARE - AUTHENTICATION
 const axios = require('axios');
@@ -54,10 +55,6 @@ async function authenticate(req, res, next) {
 }
 
 // MIDDLEWARE - STATIC FILE SERVING
-// app.get('/catalogue', (req,res) => {
-//     res.sendFile(`${DIR}/catalogue.html`);
-// })
-app.use("/catalogue", catalogueRoutes);
 
 app.get('/dash', authenticate, (req, res) => {
     res.sendFile(`${DIR}/dashboard.html`);

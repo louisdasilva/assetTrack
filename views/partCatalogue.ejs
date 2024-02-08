@@ -33,14 +33,14 @@
                 <div class="modal-content">
                     <span class="close">&times;</span>
                     <div class="formscontainer">
-                        <form method="post" action="/catalogue/part" enctype="multipart/form-data">
+                        <form method="post" action="/catalogue/part">
                             <h2>Submit a new part</h2>
-                            <input type="text" placeholder="Part Name" name="name" required />
+                            <input type="text" placeholder="Part Name" name="partName" required />
                             <input type="text" placeholder="Part Description" name="description" required />
-                            <input type="text" placeholder="Part Number" name="number" required />
-                            <input type="text" placeholder="Part Family" name="family" required />
-                            <input type="file" name="picture" required />
-                            <input type="submit" value="submit" />
+                            <input type="text" placeholder="Part Number" name="partNumber" required />
+                            <input type="text" placeholder="Part Family" name="partFamily" required />
+                            <input type="text" placeholder="image path" name="path" id="path" required />
+                            <input type="submit" value="submit" class="submit-btn" />
                         </form>
                     </div>
                 </div>
@@ -52,7 +52,9 @@
                     <p class="flow-text">Click the Button below to Add Parts to the Tracking System.</p>
                     <div class="btns">
                         <button>search</button>
-                        <button id="myBtn">Add part</button>
+                        <button id="myBtn">
+                            Add part
+                        </button>
                     </div>
                 </div>
             </div>
@@ -67,14 +69,14 @@
                                 </form>
                             </div>
                             <div class="image">
-                                <img src="http://localhost:3000/<%= part.image %>" />
+                                <img src="../images/<%= part.path %>" />
                             </div>
                             <section>
                                 <h3>
-                                    <%= part.name %>
+                                    <%= part.partName %>
                                 </h3>
                                 <p class="family">
-                                    <%= part.family %>
+                                    <%= part.partFamily %>
                                 </p>
                             </section>
                             <p class="desc">
@@ -89,8 +91,6 @@
             </div>
         </div>
     </main>
-    <footer class="footer" style='text-align:center;position:fixed;bottom:0;width:100%'></footer>
-    <!-- footer inserted by index.js -->
     <script>
         var modal = document.getElementById("myModal");
         var btn = document.getElementById("myBtn");
@@ -128,9 +128,6 @@
             location.href = SERVER_URL + '/catalogue?sk=' + session;
         }
 
-        const uploadPart = async (e) => {
-
-        }
 
         const delPart = async (e, id) => {
             try {
@@ -154,8 +151,13 @@
                 console.log(err);
             }
         }
-        $('.footer').append("Copyright: AssetTrack 2024");
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script src="./scripts/index.js"></script>
+    <script src="../scripts/inventoryScript.js"></script>
 </body>
 
 </html>

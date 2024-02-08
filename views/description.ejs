@@ -10,27 +10,32 @@
 
 <body>
     <div class="desc">
+        <!-- <i class="back_button">back</i> -->
+        <svg class="back_button" width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd"
+            clip-rule="evenodd" onclick="cataloguePage()">
+            <path d="M2.117 12l7.527 6.235-.644.765-9-7.521 9-7.479.645.764-7.529 6.236h21.884v1h-21.883z" />
+        </svg>
         <div class="item">
             <section class="image">
-                <img src="http://localhost:3000/<%= part.image %>" />
+                <img src="/images/<%= part.path %>" />
             </section>
             <section class="texts">
                 <p>
                     Name:
                     <span>
-                        <%= part.name %>
+                        <%= part.partName %>
                     </span>
                 </p>
                 <p>
                     family:
                     <span>
-                        <%= part.family %>
+                        <%= part.partFamily %>
                     </span>
                 </p>
                 <p>
                     Number:
                     <span>
-                        <%= part._id %>
+                        <%= part.partNumber %>
                     </span>
                 </p>
                 <p>
@@ -72,6 +77,10 @@
             } catch (err) {
                 console.log(err);
             }
+        }
+        function cataloguePage() {
+            const session = getSession();
+            location.href = '/catalogue?sk=' + session;
         }
     </script>
 </body>
