@@ -4,7 +4,7 @@
   "description": "A web-browser portal for a database to track and manage parts and maintenance for an aircraft fleet.",
   "main": "index.js",
   "scripts": {
-    "test": "jest mocha --require test/setupTest.js",
+    "test": "mocha --require test/setupTest.js",
     "start": "nodemon server.js"
   },
   "repository": {
