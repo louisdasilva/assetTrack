@@ -1,5 +1,5 @@
 // << GLOBAL INITIALISATIONS >>
-const socket = io();
+const socket = io(); // Initialize Socket.IO connection
 let appliedFilters = [];
 let componentsFiltered = [];
 let searchInput = {};
@@ -585,8 +585,9 @@ const initialiseDOM = async () => {
 
 // CHECK WHETHER MODULE OBJECT IS DEFINED
 // << (Node.js environment) >>
-if (typeof module !== 'undefined') { module.exports = { countValidParts, countValidParts, addCards }; } // EXPORTS
+if (typeof module !== 'undefined') { module.exports = { countValidParts, addCards, populateTable, openForm, validateFormData, getAllParts }; } // EXPORTS
 // << (browser environment) >>
 else { 
     initialiseDOM(); 
 }
+
