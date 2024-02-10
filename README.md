@@ -1,6 +1,6 @@
 # AssetTrack
 
-AssetTrack is an asset management system designed to catalogue, track, and manage parts within an organisation.\ 
+AssetTrack is an asset management system designed to catalogue, track, and manage parts within an organisation.  
 The system aims to streamline inventory management processes, providing a centralised solution for users to monitor, control, and trace assets throughout their lifecycle.
 The core functionality of AssetTrack includes maintaining a holistic list of all components used by an organisation as well as
 viewing and accessing any derivative parts to each component. 
