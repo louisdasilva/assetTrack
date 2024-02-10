@@ -1,4 +1,6 @@
-AssetTrack is an asset management system designed to catalogue, track, and manage parts within an organisation. 
+# AssetTrack
+
+AssetTrack is an asset management system designed to catalogue, track, and manage parts within an organisation.\ 
 The system aims to streamline inventory management processes, providing a centralised solution for users to monitor, control, and trace assets throughout their lifecycle.
 The core functionality of AssetTrack includes maintaining a holistic list of all components used by an organisation as well as
 viewing and accessing any derivative parts to each component. 
@@ -8,7 +10,7 @@ The system facilitates user authentication, a system homepage for easy navigatio
 Entry to the application is via a sign in page. Users cannot create their own accounts, the system is controlled by admins who will
 manually add users to the database and issue those users with their acess credentials.
 
-Provide the admin provided username and password on the user-page, then 
+Provide the admin provided username and password on the user-page, then
 --> hit "Login".
 NOTE: Whilst under development, an alert will provide sign in credentials.
 These are provided below for the same purpose:
@@ -25,6 +27,7 @@ Parts Catalogue Page:
 
 Inventory:
   The inventory is the collection of spare parts available in a spares store for use by the airline using the system.
+  
   Logistics personell can enter the part into the system upon receipt of that part into the spare's store.
   To do so:
   --> Hit the "ADD PART" button.
@@ -37,4 +40,8 @@ Inventory:
         --> Hit the "SUBMIT" button.
         If any of the compulsory fields have not been completed the submission will not go ahead, instead the user will be informed with a message beneath
         the required field that they need to provide an entry in that field.
+
+  Logistics or maintenance personell can search the inventory for parts that are available to the airline.
+  To do so:
+  --
   
