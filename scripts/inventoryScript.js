@@ -547,11 +547,11 @@ function defaultImages() {
     // Define a mapping of part families to image paths
     const partImagePaths = {
         'wing': 'wing.jpg',
-        'fuselage': 'window.jpg',
+        'fuselage': 'window.webp',
         'tail': 'tail.jpg',
         'engine': 'engine.jpg',
         'landing gear': 'tube.jpg',
-        'cockpit': 'cockpit.jpg'
+        'cockpit': 'lever.jpg'
     };
 
     // Event listener for change event on select element
