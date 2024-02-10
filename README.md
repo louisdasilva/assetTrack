@@ -13,15 +13,15 @@ Users cannot create their own accounts, the system is controlled by admins who w
 Provide the admin provided username and password on the user-page, then  
 --> hit "Login".  
 >[!NOTE]
-> Whilst under development, an alert will provide sign in credentials.
-> These are provided below for the same purpose:
-> Username: Admin
-> Password: assetTrack1!
-
-You will then be re-directed to a home page, with  system description and navigation options to a Parts Catalogue, Inventory and Operational Inventory.
-Navigation options are provided in the nav-bar at the top of each page.
-
-Parts Catalogue Page:
+> Whilst under development, an alert will provide sign in credentials.  
+> These are provided below for the same purpose:  
+> Username: Admin  
+> Password: assetTrack1!  
+  
+You will then be re-directed to a home page, with  system description and navigation options to a Parts Catalogue, Inventory and Operational Inventory.  
+Navigation options are provided in the nav-bar at the top of each page.  
+  
+### Parts Catalogue Page:  
   The purpose of the parts catalogue is to provide control over data validation for the system.
   The intent is that parts are entered into the catalogue to define them in the database as reference for the rest of the system.
   NOTE that this is an unfinished feature still under development and has not yet been integrated with the rest of the system.
