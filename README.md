@@ -1,21 +1,22 @@
 # AssetTrack
 
 AssetTrack is an asset management system designed to catalogue, track, and manage parts within an organisation.  
-The system aims to streamline inventory management processes, providing a centralised solution for users to monitor, control, and trace assets throughout their lifecycle.
-The core functionality of AssetTrack includes maintaining a holistic list of all components used by an organisation as well as
-viewing and accessing any derivative parts to each component. 
-AssetTrack allows users to add, delete, search, and manage parts, as well as explore how each part fits into an assembly. 
-The system facilitates user authentication, a system homepage for easy navigation as well as spares and operational inventories and their allocation to assemblies.
-
-Entry to the application is via a sign in page. Users cannot create their own accounts, the system is controlled by admins who will
-manually add users to the database and issue those users with their acess credentials.
-
-Provide the admin provided username and password on the user-page, then
---> hit "Login".
-NOTE: Whilst under development, an alert will provide sign in credentials.
-These are provided below for the same purpose:
-Username: Admin
-Password: assetTrack1!
+The system aims to streamline inventory management processes, providing a centralised solution for users to monitor, control, and trace assets throughout their lifecycle.  
+The core functionality of AssetTrack includes maintaining a holistic list of all components used by an organisation as well as  
+viewing and accessing any derivative parts to each component.  
+AssetTrack allows users to add, delete, search, and manage parts, as well as explore how each part fits into an assembly.   
+The system facilitates user authentication, a system homepage for easy navigation as well as spares and operational inventories and their allocation to assemblies.  
+  
+Entry to the application is via a sign in page.  
+Users cannot create their own accounts, the system is controlled by admins who will manually add users to the database and issue those users with their acess credentials.  
+  
+Provide the admin provided username and password on the user-page, then  
+--> hit "Login".  
+>[!NOTE]
+> Whilst under development, an alert will provide sign in credentials.
+> These are provided below for the same purpose:
+> Username: Admin
+> Password: assetTrack1!
 
 You will then be re-directed to a home page, with  system description and navigation options to a Parts Catalogue, Inventory and Operational Inventory.
 Navigation options are provided in the nav-bar at the top of each page.
