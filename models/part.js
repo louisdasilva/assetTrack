@@ -12,7 +12,8 @@ async function postPart(part, callback) {
         const result = await collection.insertOne(part); // MongoDB performs insertion of part into collection
         // CALLBACK: OBJECT SUCCESSFULLY ADDED TO DB
         if (result.insertedId) {
-            callback(null, { statusCode: 201, message: 'ID inserted' });
+            let insertedId = await collection.findOne({ _id: result.insertedId });
+            callback(null, { _id: insertedId._id });
         }
         // CALLBACK: OBJECT FAILED TO BE ADDED TO DB
         else {
@@ -39,7 +40,8 @@ async function updatePart(partID, updatedPart, callback) {
         // CALLBACK: OBJECT SUCCESSFULLY UPDATED IN DB
         if (result.matchedCount > 0) {
             console.log('Part Updated Successfully');
-            callback(null, { statusCode: 200, message: 'Part updated successfully' });
+            let updatedDoc = await collection.findOne({ _id: new ObjectId(partID) });
+            callback(null, { statusCode: 200, data: updatedDoc, message: 'Part updated successfully' });
         } 
         // CALLBACK: ID NOT FOUND IN DB
         else {

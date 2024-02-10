@@ -1,5 +1,5 @@
 // << GLOBAL INITIALISATIONS >>
-const socket = io();
+const socket = io(); // Initialize Socket.IO connection
 let appliedFilters = [];
 let componentsFiltered = [];
 let searchInput = {};
@@ -67,9 +67,9 @@ const addCards = (items) => {
                 itemToAppend.innerHTML = '<div class="col s4 center-align">'+
                         '<div class="card medium"><div class="card-image waves-effect waves-block waves-light"><img class="activator" src="images/'+item.path+'">'+
                         '</div><div class="card-content">'+
-                        `<span class="card-title activator grey-text text-darken-4">${item.partName}<i class="material-icons right"></i></span><p><a href="#"></a></p></div>`+
+                        `<span class="card-title card-partName activator grey-text text-darken-4">${item.partName}<i class="material-icons right"></i></span><p><a href="#"></a></p></div>`+
                         '<div class="card-reveal">'+
-                        '<span class="card-partFamily grey-text text-darken-4">'+item.partFamily+'<i class="material-icons right"></i></span>'+
+                        '<span class="card-title card-partFamily grey-text text-darken-4 ">'+item.partFamily+'<i class="material-icons right">close</i></span>'+
                         '<p class="card-text">'+item.description+'</p>'+
                         '</div>'+
                         '<div class="card-action">'+
@@ -453,7 +453,8 @@ function updatePart(cardID, formData) {
             }
         },
         success: () => {
-            socket.emit('updatePart', cardID); // Emit 'updatePart' event to the server
+            console.log("Fired");
+            socket.emit('partUpdated'); // Emit 'updatePart' event to the server
             localStorage.setItem('postUpdateSuccess', 'true'); // STORE IN MEMORY POST SUCCESS
             location.reload(true); // Refresh page
         }
@@ -494,11 +495,16 @@ function getAllParts() {
 // << WEBSOCKETS >>
 // Listen for 'partAdded' event from client.
 socket.on('partAdded', (part) => {
-    alert(`A Client Added A Part: "${part}". Refresh to see changes.`); //alert this client
+    showNotification(`A Client Added A Part: "${part}". Refresh to see changes.`, "green");
+});
+// Listen for 'partUpdated' event from client.
+socket.on('partUpdated', () => {
+    console.log("Fired!");
+    showNotification(`A Client Updated A Part. Refresh to see changes.`, "green");
 });
 // Listen for 'removePart' event from client
-socket.on('partRemoved', (part) => {
-    alert("A Client Removed A Part. Refresh to see changes.");  //alert this client
+socket.on('partRemoved', () => {
+    showNotification("A Client Removed A Part. Refresh to see changes.", "orange");
 });
 // << END WEBSOCKETS >>
 
@@ -534,6 +540,30 @@ function showNotification(message, colour) {
 }
 // << END NOTIFICATIONS >>
 
+function defaultImages() {
+    const partFamilySelect = document.getElementById('partFamily');
+    const pathInput = document.getElementById('path');
+
+    // Define a mapping of part families to image paths
+    const partImagePaths = {
+        'wing': 'wing.jpg',
+        'fuselage': 'window.webp',
+        'tail': 'tail.jpg',
+        'engine': 'engine.jpg',
+        'landing gear': 'tube.jpg',
+        'cockpit': 'lever.jpg'
+    };
+
+    // Event listener for change event on select element
+    partFamilySelect.addEventListener('change', function() {
+        const selectedOption = this.value; // Get the selected option value
+        const imagePath = partImagePaths[selectedOption]; // Get the corresponding image path
+        if (imagePath) {
+            pathInput.value = imagePath; // Set the path input value
+            pathInput.focus(); 
+        }
+    });
+}
 
 
 // << MAIN METHIOD >>
@@ -552,6 +582,7 @@ const initialiseDOM = async () => {
 
         $(document).ready(function () {
             checkNotifications();
+            defaultImages();
             $('.materialboxed').materialbox();
             $('#addPartButton').click(() => { 
                 resetFormInput();
@@ -585,8 +616,9 @@ const initialiseDOM = async () => {
 
 // CHECK WHETHER MODULE OBJECT IS DEFINED
 // << (Node.js environment) >>
-if (typeof module !== 'undefined') { module.exports = { countValidParts, countValidParts, addCards }; } // EXPORTS
+if (typeof module !== 'undefined') { module.exports = { countValidParts, addCards, populateTable, openForm, validateFormData, validSearchInput }; } // EXPORTS
 // << (browser environment) >>
 else { 
     initialiseDOM(); 
 }
+
