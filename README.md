@@ -42,8 +42,28 @@ A pop up form will be provided where details can be provided in the fields as fo
 * Description: Enter a description of the part - This field is compulsory.  
 --> Hit the "SUBMIT" button.  
 If any of the compulsory fields have not been completed the submission will not go ahead, instead the user will be informed with a message beneath the required field that they need to provide an entry in          that field.
+  
+Logistics or maintenance personell can search the inventory for parts that are available to the airline.  
+To do so:  
+--> Hit the "SEARCH" button.
+A pop up form will be provided where the search term can be entered.  
+Multiple search filters can be applied together.  
 
- Logistics or maintenance personell can search the inventory for parts that are available to the airline.
- To do so:
- --
+### Operational Inventory:  
+The operational inventory is used to track parts installed to aircraft.  
+
+The landing page for the operational inventory shows the airline fleet.  
+  
+Additional aircaft can be added using the button at the bottom of the page.  
+--> Hit the "Add Aircraft" button.
+A pop up form will be proveded where you can enter the aircraft registration and again hit "Add Aircaft" on the pop up form.  
+
+To view an aircraft, click the button displaying the registration of the desired aircraft.  
+A table will be presented with all parts fitted to the aircraft and an additional button to "Install Parts".  
+To install a part to the aircraft, it first has to be available in the (spares) inventory. Ensure the desired part is available on the inventory page before trying to add it to an aircraft.  
+When satisfied that a part is available,  
+--> Hit the "Install Parts" button.
+A pop up form will be provided where the part name can be entered before once again hitting "Install Part" within the pop up form.
+
+ 
   
