@@ -22,25 +22,26 @@ You will then be re-directed to a home page, with  system description and naviga
 Navigation options are provided in the nav-bar at the top of each page.  
   
 ### Parts Catalogue Page:  
-  The purpose of the parts catalogue is to provide control over data validation for the system.
-  The intent is that parts are entered into the catalogue to define them in the database as reference for the rest of the system.
-  NOTE that this is an unfinished feature still under development and has not yet been integrated with the rest of the system.
-
-Inventory:
-  The inventory is the collection of spare parts available in a spares store for use by the airline using the system.
+  The purpose of the parts catalogue is to provide control over data validation for the system.  
+  The intent is that parts are entered into the catalogue to define them in the database as reference for the rest of the system.  
+  >[!Warning]
+  >This is an unfinished feature still under development and has not yet been integrated with the rest of the system.  
+  >As such validation cannot currently be referenced to this page.  
   
-  Logistics personell can enter the part into the system upon receipt of that part into the spare's store.
-  To do so:
-  --> Hit the "ADD PART" button.
-      A pop up form will be provided where details can be provided in the fields as follows:
-        Part Name: Enter the name of the part - this field is compulsory.
-        Part Number: Enter the part number of the part - this field is compulsory.
-        Part Family: Select the correct part family of the part from the drop down menu provied - this field is compulsory.
-        Part Image Path: Provide the name of the picture saved in the provided system folder that you want displayed for this part - this field is optional.
-        Description: Enter a description of the part - This field is compulsory.
-        --> Hit the "SUBMIT" button.
-        If any of the compulsory fields have not been completed the submission will not go ahead, instead the user will be informed with a message beneath
-        the required field that they need to provide an entry in that field.
+### Inventory:  
+  The inventory is the collection of spare parts available in a spares store for use by the airline using the system.  
+    
+  Logistics personell can enter the part into the system upon receipt of that part into the spare's store.  
+  To do so:  
+  --> Hit the "ADD PART" button.  
+      A pop up form will be provided where details can be provided in the fields as follows:  
+      * Part Name: Enter the name of the part - this field is compulsory.    
+      * Part Number: Enter the part number of the part - this field is compulsory.  
+      * Part Family: Select the correct part family of the part from the drop down menu provied - this field is compulsory.  
+      * Part Image Path: Provide the name of the picture saved in the provided system folder that you want displayed for this part - this field is optional.  
+      * Description: Enter a description of the part - This field is compulsory.  
+        --> Hit the "SUBMIT" button.  
+        If any of the compulsory fields have not been completed the submission will not go ahead, instead the user will be informed with a message beneath the required field that they need to provide an entry in          that field.
 
   Logistics or maintenance personell can search the inventory for parts that are available to the airline.
   To do so:
