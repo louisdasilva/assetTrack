@@ -67,9 +67,9 @@ const addCards = (items) => {
                 itemToAppend.innerHTML = '<div class="col s4 center-align">'+
                         '<div class="card medium"><div class="card-image waves-effect waves-block waves-light"><img class="activator" src="images/'+item.path+'">'+
                         '</div><div class="card-content">'+
-                        `<span class="card-title activator grey-text text-darken-4">${item.partName}<i class="material-icons right"></i></span><p><a href="#"></a></p></div>`+
+                        `<span class="card-title card-partName activator grey-text text-darken-4">${item.partName}<i class="material-icons right"></i></span><p><a href="#"></a></p></div>`+
                         '<div class="card-reveal">'+
-                        '<span class="card-title grey-text text-darken-4">'+item.partFamily+'<i class="material-icons right">close</i></span>'+
+                        '<span class="card-title card-partFamily grey-text text-darken-4 ">'+item.partFamily+'<i class="material-icons right">close</i></span>'+
                         '<p class="card-text">'+item.description+'</p>'+
                         '</div>'+
                         '<div class="card-action">'+
@@ -540,6 +540,30 @@ function showNotification(message, colour) {
 }
 // << END NOTIFICATIONS >>
 
+function defaultImages() {
+    const partFamilySelect = document.getElementById('partFamily');
+    const pathInput = document.getElementById('path');
+
+    // Define a mapping of part families to image paths
+    const partImagePaths = {
+        'wing': 'wing.jpg',
+        'fuselage': 'window.jpg',
+        'tail': 'tail.jpg',
+        'engine': 'engine.jpg',
+        'landing gear': 'tube.jpg',
+        'cockpit': 'cockpit.jpg'
+    };
+
+    // Event listener for change event on select element
+    partFamilySelect.addEventListener('change', function() {
+        const selectedOption = this.value; // Get the selected option value
+        const imagePath = partImagePaths[selectedOption]; // Get the corresponding image path
+        if (imagePath) {
+            pathInput.value = imagePath; // Set the path input value
+            pathInput.focus(); 
+        }
+    });
+}
 
 
 // << MAIN METHIOD >>
@@ -558,6 +582,7 @@ const initialiseDOM = async () => {
 
         $(document).ready(function () {
             checkNotifications();
+            defaultImages();
             $('.materialboxed').materialbox();
             $('#addPartButton').click(() => { 
                 resetFormInput();

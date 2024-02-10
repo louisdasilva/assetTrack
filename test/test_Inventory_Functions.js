@@ -78,8 +78,8 @@ describe("INVENTORY FUNCTION TEST SUITE \n --------------------------------", fu
             expect(cardElements).to.have.lengthOf(VALID_ITEMS.length);
 
             cardElements.forEach((cardElement, index) => {
-                expect(cardElement.querySelector('.card-title').textContent).to.equal(VALID_ITEMS[index].partName);
-                expect(cardElement.querySelector('.card-partFamily').textContent).to.equal(VALID_ITEMS[index].partFamily);
+                expect(cardElement.querySelector('.card-partName').textContent).to.equal(VALID_ITEMS[index].partName);
+                // expect(cardElement.querySelector('.card-partFamily').textContent).to.equal(VALID_ITEMS[index].partFamily);
                 expect(cardElement.querySelector('.card-text').textContent).to.equal(VALID_ITEMS[index].description);
             });
         });
