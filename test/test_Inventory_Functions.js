@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { addCards, countValidParts, populateTable, openForm, validateFormData } = require('../scripts/inventoryScript');
+const { addCards, countValidParts, populateTable, validateFormData, validSearchInput, filterAlreadyApplied } = require('../scripts/inventoryScript');
 const { JSDOM } = require('jsdom');
 
 const mockJQuery = require('jquery');
@@ -178,6 +178,33 @@ describe("INVENTORY FUNCTION TEST SUITE \n --------------------------------", fu
             delete global.document;
         });
     });
+
+    
+    describe('Function Test (validSearchInput)', function () {
+        beforeEach(() => {
+            const dom = new JSDOM('<html><body>' +
+            '<div id="SearchFeedbackText"></div>' +
+            '</body></html>');
+            global.document = dom.window.document;
+        });
+
+        it('Valid Search Input', function () {
+            const isValid = validSearchInput("wing");
+            expect(isValid).to.be.true;
+        });
+    
+        it('Empty Search Input', function () {
+            const isValid = validSearchInput("");
+            expect(isValid).to.be.false;
+        });
+
+        // CLEAN UP
+        after(function () {
+            delete global.window;
+            delete global.document;
+        });
+    });
+    
 });
 
 

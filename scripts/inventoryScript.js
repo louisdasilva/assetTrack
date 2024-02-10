@@ -69,7 +69,7 @@ const addCards = (items) => {
                         '</div><div class="card-content">'+
                         `<span class="card-title activator grey-text text-darken-4">${item.partName}<i class="material-icons right"></i></span><p><a href="#"></a></p></div>`+
                         '<div class="card-reveal">'+
-                        '<span class="card-partFamily grey-text text-darken-4">'+item.partFamily+'<i class="material-icons right"></i></span>'+
+                        '<span class="card-title grey-text text-darken-4">'+item.partFamily+'<i class="material-icons right">close</i></span>'+
                         '<p class="card-text">'+item.description+'</p>'+
                         '</div>'+
                         '<div class="card-action">'+
@@ -453,7 +453,8 @@ function updatePart(cardID, formData) {
             }
         },
         success: () => {
-            socket.emit('updatePart', cardID); // Emit 'updatePart' event to the server
+            console.log("Fired");
+            socket.emit('partUpdated'); // Emit 'updatePart' event to the server
             localStorage.setItem('postUpdateSuccess', 'true'); // STORE IN MEMORY POST SUCCESS
             location.reload(true); // Refresh page
         }
@@ -494,11 +495,16 @@ function getAllParts() {
 // << WEBSOCKETS >>
 // Listen for 'partAdded' event from client.
 socket.on('partAdded', (part) => {
-    alert(`A Client Added A Part: "${part}". Refresh to see changes.`); //alert this client
+    showNotification(`A Client Added A Part: "${part}". Refresh to see changes.`, "green");
+});
+// Listen for 'partUpdated' event from client.
+socket.on('partUpdated', () => {
+    console.log("Fired!");
+    showNotification(`A Client Updated A Part. Refresh to see changes.`, "green");
 });
 // Listen for 'removePart' event from client
-socket.on('partRemoved', (part) => {
-    alert("A Client Removed A Part. Refresh to see changes.");  //alert this client
+socket.on('partRemoved', () => {
+    showNotification("A Client Removed A Part. Refresh to see changes.", "orange");
 });
 // << END WEBSOCKETS >>
 
@@ -585,7 +591,7 @@ const initialiseDOM = async () => {
 
 // CHECK WHETHER MODULE OBJECT IS DEFINED
 // << (Node.js environment) >>
-if (typeof module !== 'undefined') { module.exports = { countValidParts, addCards, populateTable, openForm, validateFormData, getAllParts }; } // EXPORTS
+if (typeof module !== 'undefined') { module.exports = { countValidParts, addCards, populateTable, openForm, validateFormData, validSearchInput }; } // EXPORTS
 // << (browser environment) >>
 else { 
     initialiseDOM(); 

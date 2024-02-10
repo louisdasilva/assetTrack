@@ -98,6 +98,10 @@ io.on('connection', (socket) => // event listener triggered when a new connectio
     socket.on('addPart', (part) => {
         io.emit('partAdded', part);// Broadcast the added part to all clients
     });
+    // Listen for 'updatePart' event from client
+    socket.on('partUpdated', (part) => {
+        io.emit('partUpdated', part);// Broadcast the updated part to all clients
+    });
     // Listen for 'removePart' event from client
     socket.on('removePart', (part) => {
         io.emit('partRemoved', part);// Broadcast part removed to all clients
